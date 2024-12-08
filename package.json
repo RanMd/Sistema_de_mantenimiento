@@ -1,0 +1,15 @@
+{
+  "name": "sistema-mantenimiento",
+  "version": "1.0.0",
+  "description": "Sistema que se encargara de llevar a cabo un registro y mantenimiento de activos o dispositivos, sistema creado como proyecto de final de semestre de M.A. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/A1EXF6A/Sistema_de_mantenimiento"
+  },
+  "author": "Los5Furiosos",
+  "license": "ISC"
+}
