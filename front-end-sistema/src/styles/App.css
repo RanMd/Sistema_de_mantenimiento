@@ -1,0 +1,97 @@
+#root {
+  --color-main: #071727;
+  --color-secondary: #3c6381;
+  display: flex;
+}
+
+body {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 0 3rem;
+}
+
+.background img {
+  width: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+main {
+  background-color: var(--color-main);
+  padding: 2rem 4rem 0 4em;
+  min-height: 100vh;
+}
+
+p {
+  margin: 1rem 0;
+  color: #cecece;
+}
+
+.recommend {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.point {
+  width: 10px;
+  height: 10px;
+  background-color: #365166;
+  border-radius: 50%;
+}
+
+section {
+  text-align: center;
+  min-width: 450px;
+  max-width: 500px;
+  margin: 5rem 4rem;
+}
+
+h1 {
+  font-size: 2em;
+  line-height: 1.1;
+  margin-bottom: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  gap: 2rem;
+}
+
+form input {
+  padding: 1rem;
+  border: var(--color-main);
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #5e5e5e;
+  text-transform: uppercase;
+  transition: border-color .2s ease-in-out;
+}
+
+form input:focus {
+  border-color: var(--color-secondary);
+  outline: var(--color-secondary);
+}
+
+form button {
+  padding: 1rem;
+  background-color: var(--color-secondary);
+  transition: background-color .2s ease-in-out;
+}
+
+form button:hover {
+  background-color: #4c7a9d;
+}

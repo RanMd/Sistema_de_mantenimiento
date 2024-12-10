@@ -1,5 +1,5 @@
 import express from 'express';
-import { adminRouter } from './routes/adminRoute';
+import { userRouter } from './routes/adminRoute';
 import { database } from './config/database';
 import cors from 'cors';
 import { env } from './config/env';
@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api', adminRouter);
+app.use('/api', userRouter);
 
 database.authenticate().then(() => {
     console.log('Conexion establecida')

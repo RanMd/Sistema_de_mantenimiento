@@ -1,11 +1,12 @@
-import { Admin } from '../models/adminModel';
-import { Response } from 'express';
+import { User } from '../models/adminModel';
+import { Request, Response } from 'express';
 
-export const getAdmins = async (res: Response) => {
+export const getAdmins = async (req: Request, res: Response) => {
     try {
-        const admins = await Admin.findAll();
-        res.json(admins)
+        const users = await User.findAll();
+        res.json(users)
     } catch (error) {
-        res.status(500).json({message: (error as Error).message})
+        res.status(500)
+        res.json({message: (error as Error).message})
     }
 }

@@ -1,30 +1,41 @@
 import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
-import { env } from '../config/env';
 
-class Admin extends Model {
-    public id_adm!: number;
-    public pass_adm!: string;
+class User extends Model {
+    public ID_USU!: number;
+    public NOM_USU!: string;
+    public CON_USU!: string;
+    public ROL_USU!: string;
 }
 
-Admin.init(
+User.init(
     {
-        id_adm: {
+        ID_USU: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
-        pass_adm: {
-            type: DataTypes.STRING(20),
+        NOM_USU: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            unique: true
+        },
+        CON_USU: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        ROL_USU: {
+            type: DataTypes.CHAR(1),
             allowNull: false
         }
+
     },
     {
         sequelize: database,
-        tableName: env.database.name,
+        tableName: 'USUARIOS',
         schema: 'public',
         timestamps: false
     }
 )
 
-export { Admin };
+export { User };

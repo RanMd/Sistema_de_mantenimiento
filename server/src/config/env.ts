@@ -1,7 +1,10 @@
+import { Dialect } from 'sequelize';
+
 process.loadEnvFile();
 
 interface Config {
-    port : number;
+    dialect: Dialect,
+    port: number;
     database: {
         host: string;
         port: number;
@@ -12,6 +15,7 @@ interface Config {
 }
 
 export const env: Config = {
+    dialect: process.env.DB_DIALECT as Dialect || 'postgres',
     port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
     database: {
         host: process.env.DB_HOST || 'localhost',
