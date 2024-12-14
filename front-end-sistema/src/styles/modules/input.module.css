@@ -1,0 +1,64 @@
+.inputBox {
+    --color-main: #071727;
+    --color-secondary: #9f9f9f;
+    --pad-input: 1rem;
+    --color-border: #ccc;
+    --color-font: #838383;
+    --bg-color: #fff;
+
+    position: relative;
+}
+
+.inputBox input {
+    color: black;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    border-radius: 5px;
+    padding: var(--pad-input);
+    border: 1px solid var(--color-border);
+    transition: border-color .15s ease-in-out;
+}
+
+.inputBox input.mayus {
+    text-transform: uppercase;
+}
+
+.inputBox input:focus {
+    border-color: var(--color-secondary);
+    outline: var(--color-secondary);
+}
+
+.inputBox input:focus ~ .label,
+.inputBox input:valid ~ .label {
+    color: var(--color-secondary);
+    transform: translateX(10px) translateY(-7px);
+    font-size: 0.80em;
+    padding: 0 var(--pad-input);
+    background-color: var(--bg-color);
+}
+
+input:disabled {
+    background-color: #f9f9f9;
+    color: var(--color-font);
+}
+
+.inputBox .label {
+    position: absolute;
+    left: 0;
+    pointer-events: none;
+    font-size: 1em;
+    padding: var(--pad-input);
+    color: var(--color-font);
+    transition: .15s ease-in-out;
+}
+
+.inputBox img {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

@@ -1,0 +1,29 @@
+/* Estilos globales */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  text-align: center;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Contenedor principal */
+.nuevoBo {
+  width: 100%;
+  padding: 20px;
+  background-color: #ffffff;
+  /* Fondo blanco para secciones */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra para darle un efecto de tarjeta */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  /* Bordes redondeados */
+}

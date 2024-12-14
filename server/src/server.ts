@@ -1,8 +1,14 @@
 import express from 'express';
-import { userRouter } from './routes/adminRoute';
-import { database } from './config/database';
 import cors from 'cors';
+import { database } from './config/database';
 import { env } from './config/env';
+import { userRouter } from './routes/userRouter';
+
+// Importación de los routers
+import ProveedoresRouter from './routes/ProveedoresRouter';
+import UbicacionesRouter from './routes/UbicacionesRouter';
+import ResponsablesRouter from './routes/ResponsablesRouter';
+import RegistroActivosRouter from './routes/RegistroActivosRouter';
 
 const app = express();
 
@@ -11,11 +17,21 @@ app.use(express.json());
 
 app.use('/api', userRouter);
 
-database.authenticate().then(() => {
-    console.log('Conexion establecida')
-    app.listen(env.port, () => {
-        console.log(`Sevidor corriendo en el http://localhost:${env.port}`)
+// Registro de las rutas
+app.use('/api/proveedores', ProveedoresRouter);
+app.use('/api/ubicaciones', UbicacionesRouter);
+app.use('/api/responsables', ResponsablesRouter);
+//app.use('/api/activos', ActivosRouter);
+app.use('/api/registro-activos', RegistroActivosRouter);
+
+database.authenticate()
+    .then(() => {
+        console.log('Conexión establecida con la base de datos');
+        const PORT = env.database.port || 8000;
+        app.listen(PORT, () => {
+            console.log(`Servidor corriendo en http://localhost:${PORT}`);
+        });
     })
-}).catch((error) => {
-    console.log('Error en la conexion', error)
-})
+    .catch((error: Error) => {
+        console.error('Error en la conexión a la base de datos:', error);
+    });
