@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 
-const useField = (type: string) => {
+const useField = (type: string = 'text') => {
     const [value, setValue] = useState<string>('')
 
     const onChange = (e: ChangeEvent) => {

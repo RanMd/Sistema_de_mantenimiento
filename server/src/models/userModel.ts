@@ -2,37 +2,36 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
 
 class User extends Model {
-    public ID_USU!: number;
-    public NOM_USU!: string;
-    public CON_USU!: string;
-    public ROL_USU!: string;
+    public id_user!: number;
+    public name_user!: string;
+    public pass_user!: string;
+    public rol_user!: string;
 }
 
 User.init(
     {
-        ID_USU: {
+        id_user: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
-        NOM_USU: {
+        name_user: {
             type: DataTypes.TEXT,
             allowNull: false,
             unique: true
         },
-        CON_USU: {
+        pass_user: {
             type: DataTypes.TEXT,
             allowNull: false
         },
-        ROL_USU: {
+        rol_user: {
             type: DataTypes.CHAR(1),
             allowNull: false
         }
-
     },
     {
         sequelize: database,
-        tableName: 'USUARIOS',
+        tableName: 'usuarios',
         schema: 'public',
         timestamps: false
     }

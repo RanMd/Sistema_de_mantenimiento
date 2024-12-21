@@ -26,7 +26,7 @@ const userNameApi = async ({ userName }: { userName: string }): Promise<{ exist:
     }
 }
 
-const loginUserApi = async ({ userName, password }: { userName: string, password: string }): Promise<UserToken | {exist: boolean}> => {
+const loginUserApi = async ({ userName, password }: { userName: string, password: string }): Promise<UserToken | null> => {
     try {
         const userData = {
             userName: userName,
@@ -39,7 +39,7 @@ const loginUserApi = async ({ userName, password }: { userName: string, password
     } catch (error) {
         console.error(error);
 
-        return { exist: false};
+        return null;
     }
 }
 

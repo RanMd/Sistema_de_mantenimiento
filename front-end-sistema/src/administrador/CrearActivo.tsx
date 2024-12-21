@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Combobox from './Combobox';
-import './CrearActivo.css';
+// import './CrearActivo.css';
 import Navbar from './nvar';
 
 const CrearActivo: React.FC = () => {

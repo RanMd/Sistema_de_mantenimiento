@@ -4,7 +4,7 @@ import { database } from './config/database';
 import { env } from './config/env';
 import { userRouter } from './routes/userRouter';
 
-// Importación de los routers
+// ROUTERS
 import ProveedoresRouter from './routes/ProveedoresRouter';
 import UbicacionesRouter from './routes/UbicacionesRouter';
 import ResponsablesRouter from './routes/ResponsablesRouter';
@@ -16,18 +16,15 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', userRouter);
-
-// Registro de las rutas
 app.use('/api/proveedores', ProveedoresRouter);
 app.use('/api/ubicaciones', UbicacionesRouter);
 app.use('/api/responsables', ResponsablesRouter);
-//app.use('/api/activos', ActivosRouter);
 app.use('/api/registro-activos', RegistroActivosRouter);
 
 database.authenticate()
     .then(() => {
         console.log('Conexión establecida con la base de datos');
-        const PORT = env.database.port || 8000;
+        const PORT = env.database.port;
         app.listen(PORT, () => {
             console.log(`Servidor corriendo en http://localhost:${PORT}`);
         });
