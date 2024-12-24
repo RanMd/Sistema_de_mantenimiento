@@ -1,0 +1,37 @@
+@import 'fragments/_navbar.css';
+@import 'fragments/_activesPage.css';
+
+:root {
+    --bg-color: white;
+    --input-color-border: #d7d7d7;
+}
+
+#root {
+    min-height: 100vh;
+    min-width: 100vw;
+
+    background-color: var(--bg-color);
+    display: grid;
+    grid-template-columns: 20% 1fr;
+}
+
+input {
+    color: black;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    border-radius: 5px;
+    padding: 0.75rem;
+    border: 1px solid var(--input-color-border);
+    box-shadow: 0 1px 2px 0 rgb(235, 235, 235);
+    transition: border-color .15s ease-in-out;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+main {
+    padding: 2.5rem;
+}

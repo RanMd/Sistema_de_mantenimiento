@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Combobox from './Combobox';
 // import './CrearActivo.css';
-import Navbar from './nvar';
+import Navbar from './Navbar';
 
 const CrearActivo: React.FC = () => {
     const { tipo } = useParams<{ tipo: string }>();

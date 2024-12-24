@@ -1,32 +1,22 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { UserForm } from '../components/login/UserNameForm';
 import { UserPass } from '../components/login/UserPasswordForm';
+import { useAuth } from '../context/useAuth';
 
 import backgroundImg from '../assets/bg-img.svg'
 
 import styles from '../styles/modules/login.module.css'
 
 const Login = () => {
-    const [user, setUser] = useState<string>('');
-    const nav = useNavigate();
+    const [credential, setCredential] = useState<string | null>(null);
+    const { searchUser, loginUser } = useAuth();
 
-    useEffect(() => {
-        const user = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
-
-        if (user && token) {
-            setUser(user);
-            nav('/crear-activo');
-        }
-    }, []);
-
-    function handleUser(userName: string) {
-        setUser(userName);
+    function handleCredential(credential: string) {
+        setCredential(credential);
     }
 
     function handleEdit() {
-        setUser('');
+        setCredential(null);
     }
 
     return (
@@ -36,7 +26,13 @@ const Login = () => {
             </aside>
             <main>
                 <aside>Sistema de mantenimiento</aside>
-                {user === '' ? <UserForm handleUser={handleUser} /> : <UserPass userName={user} handleEdit={handleEdit} />}
+                {!credential
+                    ? <UserForm
+                        handleCredential={handleCredential}
+                        searchUserFunction={searchUser}
+                    />
+                    : <UserPass userName={credential!} handleEdit={handleEdit} loginUserFunction={loginUser} />
+                }
             </main>
         </div>
     )

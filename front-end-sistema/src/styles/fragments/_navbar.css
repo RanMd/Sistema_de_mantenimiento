@@ -1,0 +1,63 @@
+:root {
+    --nav-bg-color: white;
+    --nav-title-color: #172b4d;
+    --item-bg: #e9f2ff;
+    --item-color: #44546F;
+    --item-color-active: #0c66e4;
+    --item-bg-hover: #f1f2f4;
+    --item-active-bg-hover: #cce0ff;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+
+    background-color: var(--nav-bg-color);
+    padding: 2.5rem 1.5rem;
+}
+
+.navbar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--nav-title-color);
+}
+
+.navbar-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    gap: 2px;
+}
+
+.navbar-item a {
+    color: var(--item-color);
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 12px;
+    transition: background-color 0.15s ease;
+}
+
+.navbar-item a:hover {
+    background-color: var(--item-bg-hover);
+}
+
+.navbar-item a.item-active {
+    background-color: var(--item-bg);
+    color: var(--item-color-active);
+}
+
+.navbar-item a.item-active:hover {
+    background-color: var(--item-active-bg-hover);
+}
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}

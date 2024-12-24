@@ -1,14 +1,14 @@
 import { FormEvent, useState } from 'react';
 import { useField } from '../../util/hooks/useField';
-import { userNameApi } from '../../services/AuthService';
 import { SearchingOverlay } from '../SearchingOverlay';
 import { clsx } from 'clsx';
-import Input from '../Input';
+import { InputFloating } from '../Input';
 
 import styles from '../../styles/modules/form.module.css'
 
-const UserForm = ({ handleUser }: {
-    handleUser: (userName: string) => void
+const UserForm = ({ handleCredential, searchUserFunction }: {
+    handleCredential: (credential: string) => void,
+    searchUserFunction: (userName: string) => Promise<boolean>
 }) => {
     const [userNotFound, setUserNotFound] = useState<boolean>(false);
     const [searchingUser, setSearchingUser] = useState<boolean>(false);
@@ -21,20 +21,19 @@ const UserForm = ({ handleUser }: {
 
     const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setSearchingUser(true);
         searchUser(userName.value);
     }
 
     const searchUser = async (userName: string) => {
-        const { exist } = await userNameApi({ userName: userName.toLocaleUpperCase() });
+        const userNameValue = userName.toLocaleUpperCase()
+        setSearchingUser(true);
+
+        const exist = await searchUserFunction(userNameValue)
 
         setSearchingUser(false);
 
-        if (exist) {
-            handleUser(userName);
-        } else {
-            setUserNotFound(true);
-        }
+        if (exist) handleCredential(userNameValue);
+        else setUserNotFound(true);
     }
 
     return (
@@ -42,9 +41,9 @@ const UserForm = ({ handleUser }: {
             <h1>Iniciar Sesion</h1>
             <p>Ingresa tu usuario para continuar</p>
             <form onSubmit={handleOnSubmit}>
-                <Input
+                <InputFloating
                     {...userName}
-                    text='Usuario'
+                    textFloating='Usuario'
                     required
                     mayus
                 />

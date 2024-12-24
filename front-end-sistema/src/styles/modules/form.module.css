@@ -28,6 +28,7 @@
 }
 
 .formContainer form button {
+    color: inherit;
     padding: 1rem;
     background-color: var(--color-secondary);
     transition: background-color .2s ease-in-out;

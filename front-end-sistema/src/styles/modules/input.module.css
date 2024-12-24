@@ -1,9 +1,8 @@
 .inputBox {
     --color-main: #071727;
-    --color-secondary: #9f9f9f;
     --pad-input: 1rem;
-    --color-border: #ccc;
-    --color-font: #838383;
+    --color-border: #7A869A;
+    --color-font: #525a61;
     --bg-color: #fff;
 
     position: relative;
@@ -16,12 +15,8 @@
     background: transparent;
     border-radius: 5px;
     padding: var(--pad-input);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border, #7A869A);
     transition: border-color .15s ease-in-out;
-}
-
-.inputBox input.mayus {
-    text-transform: uppercase;
 }
 
 .inputBox input:focus {
@@ -29,18 +24,8 @@
     outline: var(--color-secondary);
 }
 
-.inputBox input:focus ~ .label,
-.inputBox input:valid ~ .label {
-    color: var(--color-secondary);
-    transform: translateX(10px) translateY(-7px);
-    font-size: 0.80em;
-    padding: 0 var(--pad-input);
-    background-color: var(--bg-color);
-}
-
-input:disabled {
-    background-color: #f9f9f9;
-    color: var(--color-font);
+.inputBox input.mayus {
+    text-transform: uppercase;
 }
 
 .inputBox .label {
@@ -61,4 +46,17 @@ input:disabled {
     width: 20px;
     height: 20px;
     cursor: pointer;
+}
+
+.inputBox input:focus ~ .label,
+.inputBox input:valid ~ .label {
+    transform: translateX(10px) translateY(-7px);
+    font-size: 0.80em;
+    padding: 0 var(--pad-input);
+    background-color: var(--bg-color);
+}
+
+input:disabled {
+    background-color: #f9f9f9;
+    color: var(--color-font);
 }

@@ -1,23 +1,21 @@
-import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useField } from '../../util/hooks/useField';
-import { loginUserApi } from '../../services/AuthService';
 import { SearchingOverlay } from '../SearchingOverlay';
+import { FormEvent, useState } from 'react';
+import { useField } from '../../util/hooks/useField';
 import { clsx } from 'clsx';
 
 import iconEdit from '../../assets/icon-edit.svg'
-import Input from '../Input';
+import { InputFloatingWithIcon } from '../Input';
 import styles from '../../styles/modules/form.module.css'
 
-const UserPass = ({ userName, handleEdit }: {
+const UserPass = ({ userName, handleEdit, loginUserFunction }: {
     userName: string,
-    handleEdit: () => void
+    handleEdit: () => void,
+    loginUserFunction: (userName: string, password: string) => Promise<boolean>
 }) => {
     const [userNotFound, setUserNotFound] = useState<boolean>(false);
     const [searchingUser, setSearchingUser] = useState<boolean>(false);
     const userNameField = useField();
     const userPass = useField();
-    const nav = useNavigate();
 
     const adviceClass = clsx(styles.advice, {
         [styles.error]: userNotFound,
@@ -26,29 +24,21 @@ const UserPass = ({ userName, handleEdit }: {
 
     const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setSearchingUser(true);
         loginUser(userName, userPass.value);
     }
 
     const loginUser = async (userName: string, password: string) => {
-        const res = await loginUserApi({ userName: userName.toLocaleUpperCase(), password });
-
+        const userNameValue = userName.toLocaleUpperCase()
+        setSearchingUser(true);
+        
+        const success = await loginUserFunction(userNameValue, password)
+        
         setSearchingUser(false);
-
-        if (!res) {
-            setUserNotFound(true);
-            return;
+        
+        if (!success) {
+            setUserNotFound(true)
         }
 
-        localStorage.setItem('token', res.token);
-
-        const userObject = {
-            user: userName,
-            rol: res.rol
-        }
-
-        localStorage.setItem('user', JSON.stringify(userObject));
-        nav('/crear-activo');
     }
 
     return (
@@ -56,16 +46,16 @@ const UserPass = ({ userName, handleEdit }: {
             <h1>Introduce tu contraseña</h1>
             <p>Ingresa tu contraseña para iniciar sesion</p>
             <form onSubmit={handleOnSubmit}>
-                <Input
+                <InputFloatingWithIcon
                     {...userNameField}
                     disabled
                     value={userName}
                     icon={iconEdit}
                     handleIcon={handleEdit}
                 />
-                <Input
+                <InputFloatingWithIcon
                     {...userPass}
-                    text='Contraseña'
+                    textFloating='Contraseña'
                     required
                 />
                 <button>Continuar</button>

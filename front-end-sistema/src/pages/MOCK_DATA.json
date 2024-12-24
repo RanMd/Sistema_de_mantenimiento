@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "code": "M01000012LE",
+        "name": "Monitor 01",
+        "ubication": "Laboratorio CTT",
+        "type": "Informatica"
+    },
+    {
+        "id": 2,
+        "code": "58411-199",
+        "name": "LG LG 510w",
+        "ubication": "FYWH",
+        "type": "Edgepulse"
+    },
+    {
+        "id": 3,
+        "code": "52125-097",
+        "name": "Motorola V66i",
+        "ubication": "Z93",
+        "type": "Brainverse"
+    },
+    {
+        "id": 4,
+        "code": "55154-5552",
+        "name": "Karbonn A9",
+        "ubication": "LTAS",
+        "type": "Oyonder"
+    },
+    {
+        "id": 5,
+        "code": "54868-5273",
+        "name": "Wiko Robby",
+        "ubication": "RJEO",
+        "type": "Flashdog"
+    },
+    {
+        "id": 6,
+        "code": "61995-2760",
+        "name": "Eten glofiish X610",
+        "ubication": "YWCH",
+        "type": "Wordtune"
+    },
+    {
+        "id": 7,
+        "code": "43269-804",
+        "name": "Ulefone S11",
+        "ubication": "SPHZ",
+        "type": "Riffwire"
+    },
+    {
+        "id": 8,
+        "code": "76439-240",
+        "name": "Samsung Manhattan E3300",
+        "ubication": "SVVP",
+        "type": "Jaxbean"
+    },
+    {
+        "id": 9,
+        "code": "55714-8015",
+        "name": "Ulefone Armor 8",
+        "ubication": "KRBL",
+        "type": "Quire"
+    },
+    {
+        "id": 10,
+        "code": "35356-389",
+        "name": "Samsung Galaxy Note I717",
+        "ubication": "SBUR",
+        "type": "Yakitri"
+    }
+]

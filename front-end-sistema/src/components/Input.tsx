@@ -2,33 +2,60 @@ import { ChangeEvent } from 'react';
 import styles from '../styles/modules/input.module.css';
 
 interface InputProps {
-    text?: string;
+    textFloating?: string;
+    type?: string;
+    value?: string;
     required?: boolean;
     disabled?: boolean;
-    value?: string;
-    icon?: string;
-    type?: string;
-    onChange?: (e: ChangeEvent) => void;
-    handleIcon?: () => void;
     mayus?: boolean;
+    onChange?: (e: ChangeEvent) => void;
 }
 
-
-const Input = ({ text, required, disabled, value, icon, handleIcon, type, onChange, mayus }: InputProps) => {
-    return <div className={styles.inputBox}>
-        <input
-            type={type}
-            name="user"
-            id="user"
-            onChange={onChange}
-            required={required}
-            disabled={disabled}
-            value={value}
-            className={mayus ? styles.mayus : 'rojo'}
-        />
-        <span className={styles.label}>{text}</span>
-        {icon && <img src={icon} alt='icon' onClick={handleIcon}/>}
-    </div>
+const InputFloating = ({ textFloating, required, disabled, value, type, onChange, mayus }: InputProps) => {
+    return (
+        <div className={styles.inputBox}>
+            <input
+                type={type}
+                onChange={onChange}
+                required={required}
+                disabled={disabled}
+                value={value}
+                className={mayus ? styles.mayus : ''}
+            />
+            <span className={styles.label}>{textFloating}</span>
+        </div>
+    );
 }
 
-export default Input;
+interface InputFloatingWithIconProps extends InputProps {
+    handleIcon?: () => void;
+    icon?: string;
+}
+
+const InputFloatingWithIcon = ({ textFloating,
+    required,
+    disabled,
+    value,
+    icon,
+    handleIcon,
+    type,
+    onChange,
+    mayus
+}: InputFloatingWithIconProps) => {
+    return (
+        <div className={styles.inputBox}>
+            <input
+                type={type}
+                onChange={onChange}
+                required={required}
+                disabled={disabled}
+                value={value}
+                className={mayus ? styles.mayus : ''}
+            />
+            <span className={styles.label}>{textFloating}</span>
+            {icon && <img src={icon} alt='icon' onClick={handleIcon} />}
+        </div>
+    );
+}
+
+export { InputFloatingWithIcon, InputFloating };
