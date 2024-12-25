@@ -1,20 +1,20 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 import styles from '../styles/modules/modal.module.css'
 
 const Modal = () => {
-    const dialogRef = useRef<HTMLDialogElement>(null);
+    const [isOpen, setIsOpen] = useState<boolean>(true)
 
     const handleClose = () => {
-        dialogRef.current?.close()
-        console.log(dialogRef.current)
+        setIsOpen(!isOpen);
     }
 
     return (
         <dialog
             className={styles.dialog}
+            open={isOpen}
         >
             <div className={styles.modalContent}>
-                <button className={styles.closeIcon}>
+                <button className={styles.closeIcon} onClick={handleClose}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                     </svg>
@@ -56,7 +56,7 @@ const Modal = () => {
                     </div>
                 </section>
                 <footer className={styles.modalFooter}>
-                    <button className='primary-button' onClick={handleClose}>Save changes</button>
+                    <button className='primary-button'>Save changes</button>
                 </footer>
             </div>
         </dialog>
@@ -64,3 +64,37 @@ const Modal = () => {
 }
 
 export default Modal;
+
+// import React, { useState } from 'react';
+
+// const Modal = () => {
+//   // Estado para controlar si el modal está abierto o cerrado
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   // Función para abrir el modal
+//   const openModal = () => {
+//     setIsOpen(true);
+//   };
+
+//   // Función para cerrar el modal
+//   const closeModal = () => {
+//     setIsOpen(false);
+//   };
+
+//   return (
+//     <div>
+//       <button onClick={openModal}>Abrir Modal</button>
+
+//       {/* El elemento dialog que será el modal */}
+//       <dialog open={isOpen}>
+//         <div>
+//           <h2>Este es un modal</h2>
+//           <p>Puedes poner el contenido que quieras aquí.</p>
+//           <button onClick={closeModal}>Cerrar Modal</button>
+//         </div>
+//       </dialog>
+//     </div>
+//   );
+// };
+
+// export default Modal;
