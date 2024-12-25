@@ -3,7 +3,7 @@ import { AuthProvider } from '../context/useAuth';
 import { ReactNode } from 'react';
 
 import CrearActivo from '../administrador/CrearActivo';
-import ActivesPage from './ActivesPage';
+import ActivesPage from './Actives';
 import Navbar from '../administrador/Navbar';
 import Login from './Login';
 
