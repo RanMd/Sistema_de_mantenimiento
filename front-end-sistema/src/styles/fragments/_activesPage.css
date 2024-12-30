@@ -1,14 +1,25 @@
 .actives-page {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
+    padding: 2.5rem;
+    padding-top: 2rem;
+    padding-bottom: 0;
+}
+
+.actives-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .search-section {
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
+    align-items: center;
 }
 
-.search-section input {
-    max-width: 250px;
+.search-filters {
+    display: flex;
+    gap: 1rem;
 }

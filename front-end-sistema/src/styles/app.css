@@ -10,23 +10,25 @@
 
 #root {
     min-height: 100vh;
-    min-width: 100vw;
-
     background-color: var(--bg-color);
     display: grid;
     grid-template-columns: 20% 1fr;
 }
 
-input {
+input:not([type = "checkbox"]) {
     color: black;
     outline: none;
-    width: 100%;
     background: transparent;
     border-radius: 5px;
     padding: 0.75rem;
     border: 1px solid var(--input-color-border);
     box-shadow: 0 1px 2px 0 rgb(235, 235, 235);
     transition: border-color .15s ease-in-out;
+    font-size: revert;
+}
+
+button {
+    cursor: pointer;
 }
 
 .primary-button {
@@ -37,8 +39,6 @@ input {
     line-height: 1.25rem;
     padding: .5rem 1rem;
     border-radius: calc(0.5rem - 2px);
-
-    cursor: pointer;
     transition: background-color 0.2s ,border-color 0.25s;
     box-shadow: var(--tw-shadow);
 }
@@ -50,8 +50,4 @@ input {
 h1 {
     font-size: 1.5rem;
     font-weight: 500;
-}
-
-main {
-    padding: 2.5rem;
 }
