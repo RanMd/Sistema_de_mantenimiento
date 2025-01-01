@@ -1,11 +1,12 @@
 [
     {
-        "id": 1,
+        "id": 4,
         "code": "M01000012LE",
         "type": "Monitor",
         "name": "Monitor 01",
         "ubication": "Laboratorio CTT",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0001"
     },
     {
         "id": 2,
@@ -13,7 +14,8 @@
         "type": "Monitor",
         "name": "LG LG 510w",
         "ubication": "FYWH",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0002"
     },
     {
         "id": 3,
@@ -21,15 +23,17 @@
         "type": "Monitor",
         "name": "Motorola V66i",
         "ubication": "Z93",
-        "category": "Oficina"
+        "category": "Oficina",
+        "buyProcess": "PR0003"
     },
     {
-        "id": 4,
+        "id": 1,
         "code": "55154-5552",
         "type": "Monitor",
         "name": "Karbonn A9",
         "ubication": "LTAS",
-        "category": "Oficina"
+        "category": "Oficina",
+        "buyProcess": "PR0004"
     },
     {
         "id": 5,
@@ -37,7 +41,8 @@
         "type": "PC",
         "name": "Wiko Robby",
         "ubication": "RJEO",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0005"
     },
     {
         "id": 6,
@@ -45,7 +50,8 @@
         "type": "PC",
         "name": "Eten glofiish X610",
         "ubication": "YWCH",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0006"
     },
     {
         "id": 7,
@@ -53,7 +59,8 @@
         "type": "PC",
         "name": "Ulefone S11",
         "ubication": "SPHZ",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0007"
     },
     {
         "id": 8,
@@ -61,7 +68,8 @@
         "type": "Teclado",
         "name": "Samsung Manhattan E3300",
         "ubication": "SVVP",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0008"
     },
     {
         "id": 9,
@@ -69,7 +77,8 @@
         "type": "Teclado",
         "name": "Ulefone Armor 8",
         "ubication": "KRBL",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0009"
     },
     {
         "id": 10,
@@ -77,7 +86,8 @@
         "type": "Teclado",
         "name": "Samsung Galaxy Note I717",
         "ubication": "SBUR",
-        "category": "Informatica"
+        "category": "Informatica",
+        "buyProcess": "PR0010"
     },
     {
         "id": 11,
@@ -85,7 +95,8 @@
         "type": "Teclado",
         "name": "Ulefone Armor 8",
         "ubication": "KRBL",
-        "category": "Oficina"
+        "category": "Oficina",
+        "buyProcess": "PR0011"
     },
     {
         "id": 12,
@@ -93,6 +104,7 @@
         "type": "Teclado",
         "name": "Samsung Galaxy Note I717",
         "ubication": "SBUR",
-        "category": "Oficina"
+        "category": "Oficina",
+        "buyProcess": "PR0012"
     }
 ]

@@ -1,5 +1,6 @@
-import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, Children, FC, ReactNode, useEffect, useId, useRef, useState } from 'react';
 import styles from '../styles/modules/input.module.css';
+import clsx from 'clsx';
 
 interface InputBaseProps {
     type?: string;
@@ -80,17 +81,35 @@ const arrowIcon = (
 )
 
 interface ComboBoxInputProps extends InputBaseProps {
-    placeholder?: string,
+    placeholder?: string;
     children: ReactNode,
+    setOption: (option: string) => void,
+    className?: string;
 }
 
-const ComboBoxInput: FC<ComboBoxInputProps> = ({ children }) => {
+const ComboBoxInput: FC<ComboBoxInputProps> = ({ placeholder, children, setOption: setOptionParent, className }) => {
     const [option, setOption] = useState<string>('');
     const divRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const uniqueID = useId();
 
-    const handleChangeOption = (newOption: EventTarget) => {
-        const element = (newOption as HTMLLIElement)
-        setOption(element.textContent!)
+    const childrenArray = Children.toArray(children);
+
+    const labelClass = clsx(styles.ComboBoxLabel, className && className);
+
+    const handleChangeOption = (newOption: string | EventTarget) => {
+        let option = '';
+
+        if (typeof newOption === 'string') {
+            option = newOption;
+        } else {
+            const element = (newOption as HTMLLIElement);
+            option = element.textContent!;
+        }
+
+        setOption(option);
+        setOptionParent(option);
+        inputRef.current!.checked = false;
     }
 
     useEffect(() => {
@@ -105,15 +124,16 @@ const ComboBoxInput: FC<ComboBoxInputProps> = ({ children }) => {
             <input
                 className={styles.ComboBoxCheck}
                 type='checkbox'
-                id='filterType'
+                id={uniqueID}
+                ref={inputRef}
             />
             <label
-                htmlFor="filterType"
-                className={styles.ComboBoxLabel}
+                htmlFor={uniqueID}
+                className={labelClass}
             >
                 {
                     option === '' ?
-                        children :
+                        <span>{placeholder}</span> :
                         <span className={styles.ComboBoxTag}>
                             {option}
                         </span>
@@ -121,18 +141,31 @@ const ComboBoxInput: FC<ComboBoxInputProps> = ({ children }) => {
                 {arrowIcon}
             </label>
             <ul className={styles.ComboBoxData}>
-                <li
-                    className={styles.ComboBoxItem}
-                    onClick={({ target }) => handleChangeOption(target)}
-                >
-                    <span>Monitor</span>
-                </li>
-                <li
-                    className={styles.ComboBoxItem}
-                    onClick={({ target }) => handleChangeOption(target)}
-                >
-                    <span>PC</span>
-                </li>
+                {
+                    childrenArray.map((value, index) => {
+                        if (index === 0) {
+                            return (
+                                <li
+                                    key={index}
+                                    className={styles.ComboBoxItem}
+                                    onClick={() => handleChangeOption('')}
+                                >
+                                    {value}
+                                </li>
+                            )
+                        }
+
+                        return (
+                            <li
+                                key={index}
+                                className={styles.ComboBoxItem}
+                                onClick={(e) => handleChangeOption(e.target)}
+                            >
+                                {value}
+                            </li>
+                        )
+                    })
+                }
             </ul>
         </div>
     )

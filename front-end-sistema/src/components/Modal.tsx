@@ -1,12 +1,33 @@
-import { useState } from 'react'
-import styles from '../styles/modules/modal.module.css'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { Activo } from '../models/Active';
+import { getActivo } from '../services/ActiveService';
+import styles from '../styles/modules/modal.module.css';
 
-const Modal = () => {
-    const [isOpen, setIsOpen] = useState<boolean>(true)
 
-    const handleClose = () => {
-        setIsOpen(!isOpen);
-    }
+interface ModalProps {
+    id_activo: number | null;
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+}
+
+const Modal: FC<ModalProps> = ({ id_activo, isOpen, setIsOpen }) => {
+    const [activo, setActivo] = useState<Activo>()
+
+    const handleClose = useCallback(() => {
+        setIsOpen(false);
+    }, [setIsOpen])
+
+    useEffect(() => {
+        if (!id_activo) { return; }
+
+        const fetchActivo = async () => {
+            const { data } = await getActivo({ id_activo });
+
+            if (data) setActivo(data);
+        }
+
+        fetchActivo();
+    }, [id_activo])
 
     return (
         <dialog
@@ -27,74 +48,59 @@ const Modal = () => {
                     <div className={styles.mainSection}>
                         <div className={styles.groupInfo}>
                             <span className={styles.infoLabel}>Código del activo</span>
-                            <span className={styles.detail}>MON00000012DEL</span>
+                            <span className={styles.detail}>{activo?.code_act}</span>
                         </div>
                         <div className={styles.groupInfo}>
-                            <span className={styles.infoLabel}>Nombre</span>
-                            <span className={styles.detail}>Monitor01</span>
-                        </div>
-                        <div className={styles.groupInfo}>
-                            <span className={styles.infoLabel}>Ubicación</span>
-                            <span className={styles.detail}>FISEI - Piso2 - Laboratorio CTT</span>
+                            <span className={styles.infoLabel}>Categoria</span>
+                            <span className={styles.detail}>{activo?.category.category_type}</span>
                         </div>
                         <div className={styles.groupInfo}>
                             <span className={styles.infoLabel}>Tipo</span>
-                            <span className={styles.detail}>Monitor</span>
+                            <span className={styles.detail}>{activo?.type_act}</span>
                         </div>
                         <div className={styles.groupInfo}>
                             <span className={styles.infoLabel}>Marca</span>
-                            <span className={styles.detail}>DELL</span>
+                            <span className={styles.detail}>{activo?.brand_act}</span>
+                        </div>
+                        <div className={styles.groupInfo}>
+                            <span className={styles.infoLabel}>Nombre</span>
+                            <span className={styles.detail}>{activo?.name_act}</span>
+                        </div>
+                        <div className={styles.groupInfo}>
+                            <span className={styles.infoLabel}>Estado</span>
+                            <span className={styles.detail}>{activo?.state_act}</span>
+                        </div>
+                        <div className={styles.groupInfo}>
+                            <span className={styles.infoLabel}>Ubicación</span>
+                            <span className={styles.detail}>
+                                {activo?.ubication.edificio.name_edi} - Piso {activo?.ubication.floor_ubi} - {activo?.ubication.name_ubi}
+                            </span>
+                        </div>
+                        <div className={styles.groupInfo}>
+                            <span className={styles.infoLabel}>Fecha de adquisición</span>
+                            <span className={styles.detail}>
+                                {activo?.buy_process.date_proc}
+                            </span>
+                        </div>
+                        <div className={styles.groupInfo}>
+                            <span className={styles.infoLabel}>Proceso de compra</span>
+                            <span className={styles.detail}>
+                                {activo?.buy_process.code_proc}
+                            </span>
                         </div>
                     </div>
                 </section>
                 <section className={styles.sectionPart}>
                     <header className={styles.modalHeader}>
-                        <h2>Historial de Activos</h2>
+                        <h2>Historial de Mantenimiento</h2>
                         <p>Esta parte refleja el historial completo de acciones y cambios realizados sobre el activo.</p>
                     </header>
                     <div className={styles.mainSection}>
                     </div>
                 </section>
-                <footer className={styles.modalFooter}>
-                    <button className='primary-button'>Save changes</button>
-                </footer>
             </div>
         </dialog>
     )
 }
 
-export default Modal;
-
-// import React, { useState } from 'react';
-
-// const Modal = () => {
-//   // Estado para controlar si el modal está abierto o cerrado
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   // Función para abrir el modal
-//   const openModal = () => {
-//     setIsOpen(true);
-//   };
-
-//   // Función para cerrar el modal
-//   const closeModal = () => {
-//     setIsOpen(false);
-//   };
-
-//   return (
-//     <div>
-//       <button onClick={openModal}>Abrir Modal</button>
-
-//       {/* El elemento dialog que será el modal */}
-//       <dialog open={isOpen}>
-//         <div>
-//           <h2>Este es un modal</h2>
-//           <p>Puedes poner el contenido que quieras aquí.</p>
-//           <button onClick={closeModal}>Cerrar Modal</button>
-//         </div>
-//       </dialog>
-//     </div>
-//   );
-// };
-
-// export default Modal;
+export { Modal };

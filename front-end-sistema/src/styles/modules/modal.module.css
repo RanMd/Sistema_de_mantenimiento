@@ -25,6 +25,7 @@
     gap: 2rem;
     max-height: 90vh;
     overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .closeIcon {
@@ -58,7 +59,8 @@
     font-weight: 600;
 }
 
-.modalHeader p {
+.modalHeader p, 
+.modalHeader span {
     font-size: .875rem;
     color: #71717A;
     line-height: 1.25rem;
@@ -85,6 +87,11 @@
     align-items: center;
 }
 
+.groupInfo .inputModal {
+    padding: .5rem;
+    font-size: 0.8rem;
+}
+
 .infoLabel {
     font-size: .875rem;
     color: #09090B;
@@ -99,4 +106,55 @@
     padding: 0.5rem 0.5rem;
     border-radius: 0.25rem;
     box-shadow: var(--detail-shadow);
+}
+
+.detailReadOnly {
+    min-height: 34px;
+    color: #8a8a8a;
+    background-color: #ebebeb;
+}
+
+.inputFile {
+    display: none;
+}
+
+.fileInputLabel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 2rem;
+    border: 1px solid #E5E5E5;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #09090B;
+}
+
+.comboBox {
+    padding: 0.5rem;
+}
+
+.modalHeader .linkFormat {
+    color: black;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sectionMessage {
+    padding: 1rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.sectionError {
+    background-color: red;
+}
+
+.sectionSuccess {
+    background-color: rgb(43, 190, 43);
+}
+
+.sectionMessage span {
+    color: white;
+    text-align: center;
 }

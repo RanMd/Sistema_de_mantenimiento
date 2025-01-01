@@ -43,7 +43,13 @@ button {
     box-shadow: var(--tw-shadow);
 }
 
-.primary-button:hover {
+.primary-button:disabled {
+    background-color: #737373;
+    color: #8a8a8a;
+    cursor: auto;
+}
+
+.primary-button:not(:disabled):hover {
     background-color: #303034;
 }
 

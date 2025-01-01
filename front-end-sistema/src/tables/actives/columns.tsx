@@ -8,14 +8,8 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import styles from '../../styles/modules/dropdownmenu.module.css'
-
-type Active = {
-    id: number;
-    code: string;
-    name: string;
-    ubication: string;
-    type: string;
-};
+import { ActiveToTable } from '../../models/Active';
+import { deleteActive } from '../../services/ActiveService';
 
 const optionSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
@@ -29,11 +23,7 @@ const arrowUpDown = (
     </svg>
 )
 
-const columns: ColumnDef<Active>[] = [
-    {
-        header: 'Código',
-        accessorKey: 'code',
-    },
+const columns: ColumnDef<ActiveToTable>[] = [
     {
         header: 'Nombre',
         accessorKey: 'name',
@@ -41,10 +31,6 @@ const columns: ColumnDef<Active>[] = [
     {
         header: 'Categoria',
         accessorKey: 'category',
-    },
-    {
-        header: 'Ubicación',
-        accessorKey: 'ubication',
     },
     {
         accessorKey: 'type',
@@ -60,6 +46,14 @@ const columns: ColumnDef<Active>[] = [
         }
     },
     {
+        header: 'Ubicación',
+        accessorKey: 'ubication',
+    },
+    {
+        header: 'Proceso de compra',
+        accessorKey: 'buyProcess',
+    },
+    {
         header: 'Más acciones',
         cell: ({ row }) => {
             const active = row.original
@@ -71,11 +65,9 @@ const columns: ColumnDef<Active>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuPortal>
                         <DropdownMenuContent className={styles.Content} align='end'>
-                            <DropdownMenuLabel className={styles.Label}>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem className={styles.Item}>
-                                Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className={styles.Item}>
+                            <DropdownMenuLabel className={styles.Label}>Acción</DropdownMenuLabel>
+                            <DropdownMenuItem className={styles.Item}
+                                onClick={() => deleteActive(active.id)}>
                                 Eliminar
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -87,4 +79,3 @@ const columns: ColumnDef<Active>[] = [
 ]
 
 export { columns };
-export type { Active };

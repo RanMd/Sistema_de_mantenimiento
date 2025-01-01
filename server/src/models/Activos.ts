@@ -1,33 +1,144 @@
 import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
+import Ubicaciones from './Ubicaciones';
 
-class Activos extends Model {
-    public id_act!: string;
-    public nom_act!: string;
-    public mar_act!: string;
-    public mod_act!: string;
-    public serie_act!: string;
+// MARCAS ACTIVO
+
+class MarcaActivo extends Model {
+    public name_fab!: string;
+    public category_fab!: string;
 }
 
-Activos.init({
-    id_act: {
-        type: DataTypes.STRING(10),
+MarcaActivo.init({
+    name_fab: {
+        type: DataTypes.TEXT,
+        primaryKey: true
+    },
+    category_fab: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+}, {
+    sequelize: database,
+    tableName: 'fabricantes',
+    timestamps: false,
+    schema: 'public',
+
+});
+
+// CATEGORIAS ACTIVO
+
+class CategoriaActivo extends Model {
+    public name_type!: string;
+    public category_type!: string;
+}
+
+CategoriaActivo.init({
+    name_type: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        unique: true,
+        primaryKey: true
+    },
+    category_type: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+}, {
+    sequelize: database,
+    tableName: 'tipos_activo',
+    timestamps: false,
+    schema: 'public',
+
+});
+
+//  PROCESOS DE COMPRA
+
+class ProcesoCompra extends Model {
+    public id_proc!: number;
+    public code_proc!: string;
+    public date_proc!: string;
+    public provider_proc!: number;
+}
+
+ProcesoCompra.init({
+    id_proc: {
+        type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
     },
-    nom_act: {
-        type: DataTypes.STRING(100),
+    code_proc: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
-    mar_act: {
-        type: DataTypes.STRING(100),
+    date_proc: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    provider_proc: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
-    mod_act: {
-        type: DataTypes.STRING(100),
+}, {
+    sequelize: database,
+    tableName: 'procesos_compra',
+    timestamps: false,
+    schema: 'public',
+});
+
+// ACTIVO
+
+class Activo extends Model {
+    public id_act!: string;
+    public name_act!: string;
+    public code_act!: string;
+    public ubication_act!: string;
+    public state_act!: string;
+    public brand_act!: string;
+    public type_act!: string;
+    public buy_process_act!: number;
+}
+
+Activo.init({
+    id_act: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name_act: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
-    serie_act: {
-        type: DataTypes.STRING(100),
+    code_act: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    ubication_act: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: 'ubicaciones',
+            key: 'id_ubi',
+        },
+    },
+    state_act: {
+        type: DataTypes.STRING,
+    },
+    brand_act: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    type_act: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+            model: 'tipoActivo',
+            key: 'name_type',
+        },
+    },
+    buy_process_act: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
 }, {
@@ -37,4 +148,24 @@ Activos.init({
     schema: 'public',
 });
 
-export default Activos;
+Activo.belongsTo(Ubicaciones, {
+    foreignKey: 'ubication_act',
+    as: 'ubication',
+});
+
+Activo.belongsTo(CategoriaActivo, {
+    foreignKey: 'type_act',
+    as: 'category',
+});
+
+Activo.belongsTo(MarcaActivo, {
+    foreignKey: 'brand_act',
+    as: 'marca',
+});
+
+Activo.belongsTo(ProcesoCompra, {
+    foreignKey: 'buy_process_act',
+    as: 'buy_process',
+});
+
+export { Activo, CategoriaActivo, MarcaActivo, ProcesoCompra };

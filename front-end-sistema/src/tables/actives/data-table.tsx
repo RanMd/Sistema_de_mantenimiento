@@ -11,16 +11,18 @@ import {
     Table
 } from '@tanstack/react-table';
 import { Fragment } from 'react/jsx-runtime';
-import { Ref, useEffect, useImperativeHandle, useState } from 'react';
+import { Ref, useImperativeHandle, useState } from 'react';
 import styles from '../../styles/modules/table.module.css'
+import { Active } from './columns';
 
 interface IDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     ref?: Ref<Table<TData>>;
+    handleModalActive: (id: number) => void;
 }
 
-const DataTable = <TData, TValue>({ columns, data, ref }: IDataTableProps<TData, TValue>) => {
+const DataTable = <TData, TValue>({ columns, data, ref, handleModalActive }: IDataTableProps<TData, TValue>) => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -39,11 +41,12 @@ const DataTable = <TData, TValue>({ columns, data, ref }: IDataTableProps<TData,
         }
     })
 
-    useEffect(() => {
-        
-    }, [])
-
     useImperativeHandle(ref, () => table, [table]);
+
+    const handleRowClick = (rowOriginal: TData) => {
+        const id = (rowOriginal as Active).id
+        handleModalActive?.(id)
+    }
 
     return (
         <div className={styles.ActivesTable}>
@@ -68,7 +71,14 @@ const DataTable = <TData, TValue>({ columns, data, ref }: IDataTableProps<TData,
                             key={row.id}
                             data-state={row.getIsSelected() && 'selected'}
                         >
-                            {row.getVisibleCells().map((cell) => {
+                            {row.getVisibleCells().map((cell, index) => {
+                                if (index === 0) {
+                                    return (
+                                        <span key={cell.id} onClick={() => handleRowClick(cell.row.original)}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </span>
+                                    )
+                                }
                                 return (
                                     <span key={cell.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

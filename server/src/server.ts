@@ -9,6 +9,7 @@ import ProveedoresRouter from './routes/ProveedoresRouter';
 import UbicacionesRouter from './routes/UbicacionesRouter';
 import ResponsablesRouter from './routes/ResponsablesRouter';
 import RegistroActivosRouter from './routes/RegistroActivosRouter';
+import routerActivos from './routes/ActivosRouter';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', userRouter);
+app.use('/api/activos', routerActivos);
 app.use('/api/proveedores', ProveedoresRouter);
 app.use('/api/ubicaciones', UbicacionesRouter);
 app.use('/api/responsables', ResponsablesRouter);
