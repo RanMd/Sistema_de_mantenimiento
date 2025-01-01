@@ -26,6 +26,26 @@ const saveActive = async (req: Request, res: Response) => {
     }
 };
 
+const saveProcess = async (req: Request, res: Response) => {
+    try {
+        const { code_proc, provider_proc } = req.body;
+
+        if (!code_proc || !provider_proc) {
+            throw new Error('Faltan campos por llenar');
+        }
+
+        const activo = await ProcesoCompra.create({
+            code_proc,
+            provider_proc
+        });
+
+        res.status(201).json(activo);
+    } catch (error) {
+        console.log((error as Error).message)
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
 const deleteActive = async (req: Request, res: Response) => {
     try {
         const { id_active } = req.body;
@@ -35,6 +55,21 @@ const deleteActive = async (req: Request, res: Response) => {
         if (!activo) { throw new Error('Activo no encontrado') }
 
         await activo.destroy();
+    } catch (error) {
+        console.log((error as Error).message)
+        res.status(500).json({ message: (error as Error).message });
+    }
+}
+
+const deleteProcess = async (req: Request, res: Response) => {
+    try {
+        const { id_proc } = req.body;
+
+        const process = await ProcesoCompra.findByPk(id_proc);
+
+        if (!process) { throw new Error('Proceso no encontrado') }
+
+        await process.destroy();
     } catch (error) {
         console.log((error as Error).message)
         res.status(500).json({ message: (error as Error).message });
@@ -78,6 +113,23 @@ const getAllActives = async (req: Request, res: Response) => {
 const getLastId = async (req: Request, res: Response) => {
     try {
         const lastId = await Activo.max<number, Activo>('id_act', {
+            raw: true
+        });
+
+        if (!lastId) {
+            res.status(200).json({ data: 0 });
+            return;
+        }
+
+        res.status(200).json({ data: lastId });
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
+const getLastIdProcess = async (req: Request, res: Response) => {
+    try {
+        const lastId = await ProcesoCompra.max<number, ProcesoCompra>('id_proc', {
             raw: true
         });
 
@@ -170,7 +222,17 @@ const getTypes = async (req: Request, res: Response) => {
 const getProcesses = async (req: Request, res: Response) => {
     try {
         const data = await ProcesoCompra.findAll({
-            attributes: ['id_proc', 'code_proc'],
+            attributes: {
+                exclude: ['provider_proc']
+            },
+            include: [
+                {
+                    association: 'provider',
+                    attributes: ['name_pro']
+                }
+            ],
+            raw: true,
+            nest: true
         })
 
         if (data.length === 0) {
@@ -228,6 +290,6 @@ const getBrandsPerCategory = async (req: Request, res: Response) => {
 }
 
 export {
-    saveActive, getActivo, getAllActives, getCategories,
-    getTypesPerCategory, getBrandsPerCategory, getLastId, getTypes, getProcesses, deleteActive,
+    saveActive, getActivo, getAllActives, getCategories, saveProcess, getLastIdProcess,
+    getTypesPerCategory, getBrandsPerCategory, getLastId, getTypes, getProcesses, deleteActive, deleteProcess
 }

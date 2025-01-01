@@ -142,7 +142,7 @@ const ComboBoxInput: FC<ComboBoxInputProps> = ({ placeholder, children, setOptio
             </label>
             <ul className={styles.ComboBoxData}>
                 {
-                    childrenArray.map((value, index) => {
+                    childrenArray.map((child, index) => {
                         if (index === 0) {
                             return (
                                 <li
@@ -150,7 +150,7 @@ const ComboBoxInput: FC<ComboBoxInputProps> = ({ placeholder, children, setOptio
                                     className={styles.ComboBoxItem}
                                     onClick={() => handleChangeOption('')}
                                 >
-                                    {value}
+                                    {child}
                                 </li>
                             )
                         }
@@ -161,7 +161,7 @@ const ComboBoxInput: FC<ComboBoxInputProps> = ({ placeholder, children, setOptio
                                 className={styles.ComboBoxItem}
                                 onClick={(e) => handleChangeOption(e.target)}
                             >
-                                {value}
+                                {child}
                             </li>
                         )
                     })

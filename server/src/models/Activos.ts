@@ -54,6 +54,33 @@ CategoriaActivo.init({
 
 //  PROCESOS DE COMPRA
 
+class Provider extends Model {
+    public id_pro!: number;
+    public name_pro!: string;
+    public address_pro!: string;
+}
+
+Provider.init({
+    id_pro: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name_pro: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    address_pro: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}, {
+    sequelize: database,
+    tableName: 'proveedores',
+    timestamps: false,
+    schema: 'public',
+});
+
 class ProcesoCompra extends Model {
     public id_proc!: number;
     public code_proc!: string;
@@ -79,12 +106,21 @@ ProcesoCompra.init({
     provider_proc: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: 'proveedores',
+            key: 'id_pro',
+        },
     },
 }, {
     sequelize: database,
     tableName: 'procesos_compra',
     timestamps: false,
     schema: 'public',
+});
+
+ProcesoCompra.belongsTo(Provider, {
+    foreignKey: 'provider_proc',
+    as: 'provider',
 });
 
 // ACTIVO
@@ -168,4 +204,4 @@ Activo.belongsTo(ProcesoCompra, {
     as: 'buy_process',
 });
 
-export { Activo, CategoriaActivo, MarcaActivo, ProcesoCompra };
+export { Activo, CategoriaActivo, MarcaActivo, ProcesoCompra, Provider };

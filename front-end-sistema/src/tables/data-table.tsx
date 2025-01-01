@@ -12,14 +12,14 @@ import {
 } from '@tanstack/react-table';
 import { Fragment } from 'react/jsx-runtime';
 import { Ref, useImperativeHandle, useState } from 'react';
-import styles from '../../styles/modules/table.module.css'
-import { Active } from './columns';
+import styles from '../styles/modules/table.module.css'
+import { ActiveToTable } from '../models/Active';
 
 interface IDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     ref?: Ref<Table<TData>>;
-    handleModalActive: (id: number) => void;
+    handleModalActive?: ((id: number) => void);
 }
 
 const DataTable = <TData, TValue>({ columns, data, ref, handleModalActive }: IDataTableProps<TData, TValue>) => {
@@ -44,12 +44,17 @@ const DataTable = <TData, TValue>({ columns, data, ref, handleModalActive }: IDa
     useImperativeHandle(ref, () => table, [table]);
 
     const handleRowClick = (rowOriginal: TData) => {
-        const id = (rowOriginal as Active).id
+        const id = (rowOriginal as ActiveToTable).id
         handleModalActive?.(id)
     }
 
     return (
-        <div className={styles.ActivesTable}>
+        <div
+            className={styles.ActivesTable}
+            style={{
+                '--grid-table': '1fr '.repeat(table.getHeaderGroups()[0].headers.length)
+            } as React.CSSProperties}
+        >
             <div className={styles.ColumnHeaders}>
                 {table.getHeaderGroups().map((headerGroup) => (
                     <Fragment key={headerGroup.id}>

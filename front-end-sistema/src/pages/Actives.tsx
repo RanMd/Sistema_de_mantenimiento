@@ -1,6 +1,6 @@
 import { ComboBoxInput } from '../components/Input';
-import { DataTable } from '../tables/actives/data-table';
-import { columns } from '../tables/actives/columns';
+import { DataTable } from '../tables/data-table';
+import { columnsActive } from '../tables/columns';
 import { ModalCrearActivo } from '../components/ModalCreaActivo';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { Table } from '@tanstack/react-table';
@@ -124,7 +124,7 @@ const ActivesPage = () => {
                     </ComboBoxInput>
                 </div>
             </section>
-            <DataTable columns={columns} data={actives} ref={tableRef} handleModalActive={handleModalActive} ></DataTable>
+            <DataTable columns={columnsActive} data={actives} ref={tableRef} handleModalActive={handleModalActive} ></DataTable>
             <Modal id_activo={activeId} isOpen={modalActiveIsOpen} setIsOpen={setModalActiveIsOpen} />
             {modalCrearActiveIsOpen && <ModalCrearActivo isOpen={modalCrearActiveIsOpen} setIsOpen={setModalCrearActiveIsOpen} />}
         </section>

@@ -107,14 +107,20 @@ input:disabled {
 }
 
 .ComboBoxItem {
+    display: flex;
+    border-radius: 4px;
+    transition: background-color 0.05s ease-in-out;
+}
+
+.ComboBoxItem > * {
+    display: inline-block;
     font-size: 0.85rem;
     padding: 0.5rem;
-    transition: background-color 0.05s ease-in-out;
-    border-radius: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     user-select: none;
+    width: 100%;
 }
 
 .ComboBoxItem:hover {

@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ActiveToTable, Activo, ActivoToSave, ProcesoCompra, Ubicacion } from '../models/Active';
+import { Process, Provider } from '../models/Process';
 
 const api = 'http://localhost:3000/api/activos';
 
@@ -29,6 +30,25 @@ const deleteActive = async (id_active: number): Promise<{ success: boolean }> =>
         const res = await axios.delete<{
             message?: string
         }>(`${api}/delete`, { data: activeData });
+
+        if (res.data.message) { throw new Error(res.data.message) }
+
+        return { success: true };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { success: false }
+    }
+}
+
+const deleteProcess = async (id_proc: number): Promise<{ success: boolean }> => {
+    try {
+        const processData = { id_proc }
+
+        const res = await axios.delete<{
+            message?: string
+        }>(`${api}/deleteProcess`, { data: processData });
 
         if (res.data.message) { throw new Error(res.data.message) }
 
@@ -210,6 +230,26 @@ const getProcesses = async (): Promise<{ data: ProcesoCompra[] }> => {
     }
 }
 
+const getProcessesComplete = async (): Promise<{ data: Process[] }> => {
+    try {
+        const res = await axios.get<{
+            data: Process[],
+            message?: string
+        }>(`${api}/processes`);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
 const getBrandsPerCategory = async (category: string): Promise<{ data: string[] }> => {
     try {
         const brandData = { category }
@@ -258,4 +298,71 @@ const getUbicaciones = async (): Promise<{ data: Ubicacion[] }> => {
     }
 }
 
-export { getActivo, getCategories, getTypesPerCategory, getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive };
+const saveProcess = async (code_proc: string, provider_proc: string): Promise<{ success: boolean }> => {
+    try {
+        const res = await axios.post<{
+            message?: string
+        }>(`${api}/saveProcess`, {
+            code_proc,
+            provider_proc
+        });
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { success: false }
+    }
+}
+
+const getLastIdProcess = async (): Promise<{ data: number }> => {
+    try {
+        const res = await axios.get<{
+            data: number,
+            message?: string
+        }>(`${api}/lastIdProcess`);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: 0 }
+    }
+}
+
+const apiProv = 'http://localhost:3000/api/proveedores';
+
+const getProviders = async (): Promise<{ data: Provider[] }> => {
+    try {
+        const res = await axios.get<{
+            data: Provider[],
+            message?: string
+        }>(`${apiProv}/`);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
+export {
+    getActivo, getCategories, getTypesPerCategory, getProcessesComplete, getProviders, getLastIdProcess, saveProcess, deleteProcess,
+    getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive
+};

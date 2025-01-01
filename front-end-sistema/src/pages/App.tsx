@@ -6,6 +6,7 @@ import CrearActivo from '../administrador/CrearActivo';
 import ActivesPage from './Actives';
 import Navbar from '../administrador/Navbar';
 import Login from './Login';
+import ProcessPage from './Process';
 
 import '../styles/app.css'
 
@@ -18,6 +19,7 @@ const App = () => {
                 <Routes>
                     <Route path={loginRoute} element={<Login />} />
                     <Route path="/activos" element={<ActivesPage />} />
+                    <Route path="/procesos" element={<ProcessPage />} />
                     <Route path="/crear-activo" element={<CrearActivo />} />
                     <Route path="/crear-activo/:tipo" element={<CrearActivo />} />
                     <Route path="/eliminar-activo" element={<h2>Eliminar Activo</h2>} />

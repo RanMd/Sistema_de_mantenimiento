@@ -7,9 +7,10 @@ import {
     DropdownMenuTrigger
 } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import styles from '../../styles/modules/dropdownmenu.module.css'
-import { ActiveToTable } from '../../models/Active';
-import { deleteActive } from '../../services/ActiveService';
+import { ActiveToTable } from '../models/Active';
+import { deleteActive } from '../services/ActiveService';
+import styles from '../styles/modules/dropdownmenu.module.css'
+import { Process } from '../models/Process';
 
 const optionSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
@@ -23,7 +24,7 @@ const arrowUpDown = (
     </svg>
 )
 
-const columns: ColumnDef<ActiveToTable>[] = [
+const columnsActive: ColumnDef<ActiveToTable>[] = [
     {
         header: 'Nombre',
         accessorKey: 'name',
@@ -78,4 +79,28 @@ const columns: ColumnDef<ActiveToTable>[] = [
     },
 ]
 
-export { columns };
+const columnsProcess: ColumnDef<Process>[] = [
+    {
+        header: 'Codigo',
+        accessorKey: 'code_proc',
+    },
+    {
+        accessorKey: 'date_proc',
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    Fecha de compra
+                    {arrowUpDown}
+                </button>
+            )
+        }
+    },
+    {
+        header: 'Proveedor',
+        accessorKey: 'provider.name_pro',
+    }
+]
+
+export { columnsActive, columnsProcess };

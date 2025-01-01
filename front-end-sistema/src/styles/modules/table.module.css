@@ -1,5 +1,4 @@
 .ActivesTable {
-    --grid-table: 1fr 1fr 1fr 1fr 1fr 1fr;
     --border-table: 1px solid var(--input-color-border);
     --row-hover: #f5f5f5;
     --color-font: rgb(49, 49, 49);
