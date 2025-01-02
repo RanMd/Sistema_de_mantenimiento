@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { deleteActive, deleteProcess, getActivo, getAllActives, getBrandsPerCategory, getCategories, getLastId, getLastIdProcess, getProcesses, getTypes, getTypesPerCategory, saveActive, saveProcess } from '../controllers/ActivosController';
+import { deleteActive, deleteProcess, getActivo, getAllActives, getAllActivesPerUbication, getBrandsPerCategory, getCategories, getLastId, getLastIdProcess, getProcesses, getTypes, getTypesPerCategory, saveActive, saveProcess } from '../controllers/ActivosController';
 
 const routerActivos = Router();
 
@@ -16,5 +16,6 @@ routerActivos.get('/processes', getProcesses);
 routerActivos.delete('/delete', deleteActive);
 routerActivos.delete('/deleteProcess', deleteProcess);
 routerActivos.post('/saveProcess', saveProcess);
+routerActivos.post('/getActivesPerUbication', getAllActivesPerUbication);
 
 export default routerActivos;

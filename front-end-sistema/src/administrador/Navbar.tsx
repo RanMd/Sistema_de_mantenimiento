@@ -16,6 +16,9 @@ const Navbar: React.FC = () => {
                     <NavLink to="/procesos" className={({ isActive }) => isActive ? 'item-active' : ''}>Procesos de compra</NavLink>
                 </li>
                 <li className="navbar-item">
+                    <NavLink to="/mantenimientos" className={({ isActive }) => isActive ? 'item-active' : ''}>Mantenimientos</NavLink>
+                </li>
+                <li className="navbar-item">
                     <NavLink to="/reportes" className={({ isActive }) => isActive ? 'item-active' : ''}>Reportes</NavLink>
                 </li>
                 <li className="navbar-item">

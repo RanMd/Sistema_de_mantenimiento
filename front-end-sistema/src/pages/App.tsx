@@ -9,6 +9,7 @@ import Login from './Login';
 import ProcessPage from './Process';
 
 import '../styles/app.css'
+import MantenimientosPage from './Mantenimientos';
 
 const loginRoute: string = '/';
 
@@ -20,6 +21,7 @@ const App = () => {
                     <Route path={loginRoute} element={<Login />} />
                     <Route path="/activos" element={<ActivesPage />} />
                     <Route path="/procesos" element={<ProcessPage />} />
+                    <Route path="/mantenimientos" element={<MantenimientosPage />} />
                     <Route path="/crear-activo" element={<CrearActivo />} />
                     <Route path="/crear-activo/:tipo" element={<CrearActivo />} />
                     <Route path="/eliminar-activo" element={<h2>Eliminar Activo</h2>} />

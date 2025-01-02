@@ -83,7 +83,7 @@ const arrowIcon = (
 interface ComboBoxInputProps extends InputBaseProps {
     placeholder?: string;
     children: ReactNode,
-    setOption: (option: string) => void,
+    setOption?: (option: string) => void,
     className?: string;
 }
 
@@ -108,7 +108,7 @@ const ComboBoxInput: FC<ComboBoxInputProps> = ({ placeholder, children, setOptio
         }
 
         setOption(option);
-        setOptionParent(option);
+        setOptionParent?.(option);
         inputRef.current!.checked = false;
     }
 

@@ -110,6 +110,45 @@ const getAllActives = async (req: Request, res: Response) => {
     }
 };
 
+const getAllActivesPerUbication = async (req: Request, res: Response) => {
+    try {
+        const { id_ubication } = req.body
+
+        const activos = await Activo.findAll({
+            where: {
+                ubication_act: id_ubication
+            },
+            attributes: {
+                exclude: ['ubication_act', 'state_act', 'buy_process_act'],
+            },
+            include: [
+                {
+                    association: 'ubication',
+                    attributes: ['name_ubi']
+                },
+                {
+                    association: 'category',
+                    attributes: ['category_type'],
+                },
+                {
+                    association: 'buy_process',
+                    attributes: ['code_proc'],
+                }
+            ],
+            raw: true,
+            nest: true
+        });
+
+        if (activos.length === 0) {
+            throw new Error('No existen activos en esa ubicación');
+        }
+
+        res.status(200).json({ data: activos });
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
 const getLastId = async (req: Request, res: Response) => {
     try {
         const lastId = await Activo.max<number, Activo>('id_act', {
@@ -290,6 +329,6 @@ const getBrandsPerCategory = async (req: Request, res: Response) => {
 }
 
 export {
-    saveActive, getActivo, getAllActives, getCategories, saveProcess, getLastIdProcess,
+    saveActive, getActivo, getAllActives, getCategories, saveProcess, getLastIdProcess, getAllActivesPerUbication,
     getTypesPerCategory, getBrandsPerCategory, getLastId, getTypes, getProcesses, deleteActive, deleteProcess
 }

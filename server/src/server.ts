@@ -8,8 +8,8 @@ import { userRouter } from './routes/userRouter';
 import ProveedoresRouter from './routes/ProveedoresRouter';
 import UbicacionesRouter from './routes/UbicacionesRouter';
 import ResponsablesRouter from './routes/ResponsablesRouter';
-import RegistroActivosRouter from './routes/RegistroActivosRouter';
 import routerActivos from './routes/ActivosRouter';
+import routerMantenimientos from './routes/MantenimientosRouter';
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use('/api/activos', routerActivos);
 app.use('/api/proveedores', ProveedoresRouter);
 app.use('/api/ubicaciones', UbicacionesRouter);
 app.use('/api/responsables', ResponsablesRouter);
-app.use('/api/registro-activos', RegistroActivosRouter);
+app.use('/api/mantenimientos', routerMantenimientos);
 
 database.authenticate()
     .then(() => {

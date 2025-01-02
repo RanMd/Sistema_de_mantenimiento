@@ -91,6 +91,27 @@ const getActives = async (): Promise<{ data: ActiveToTable[] }> => {
     }
 }
 
+const getActivesPerUbication = async (id_ubication: number): Promise<{ data: Activo[] }> => {
+    try {
+        const activeData = { id_ubication }
+
+        const res = await axios.post<{
+            data: Activo[],
+            message?: string
+        }>(`${api}/getActivesPerUbication`, activeData);
+
+        if (res.data.message) { throw new Error(res.data.message) }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        console.log(error)
+        return { data: [] }
+    }
+}
+
 const getActivo = async ({ id_activo }: { id_activo: number }): Promise<{ data: Activo | null }> => {
     try {
         const activeData = { id_activo }
@@ -340,6 +361,28 @@ const getLastIdProcess = async (): Promise<{ data: number }> => {
     }
 }
 
+const apiMant = 'http://localhost:3000/api/mantenimientos';
+
+const getLastIdMaintenance = async (): Promise<{ data: number }> => {
+    try {
+        const res = await axios.get<{
+            data: number,
+            message?: string
+        }>(`${apiMant}/getLastIdMaintenance`);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: 0 }
+    }
+}
+
 const apiProv = 'http://localhost:3000/api/proveedores';
 
 const getProviders = async (): Promise<{ data: Provider[] }> => {
@@ -364,5 +407,6 @@ const getProviders = async (): Promise<{ data: Provider[] }> => {
 
 export {
     getActivo, getCategories, getTypesPerCategory, getProcessesComplete, getProviders, getLastIdProcess, saveProcess, deleteProcess,
-    getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive
+    getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive, getActivesPerUbication,
+    getLastIdMaintenance
 };
