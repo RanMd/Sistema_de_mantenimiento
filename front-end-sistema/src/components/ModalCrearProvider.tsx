@@ -121,8 +121,7 @@ const ModalCrearProvider: FC<ModalCrearProviderProps> = ({ isOpen, setIsOpen }) 
                                 {providers.map((provider, index) => (
                                     <span
                                         key={index}
-                                        // onClick={() => handleProvider(provider)}
-                                        onClick={() => console.log(provider)}
+                                        onClick={() => handleProvider(provider)}
                                     >
                                         {provider.name_pro}
                                     </span>
