@@ -7,7 +7,7 @@ import ActivesPage from './Actives';
 import Navbar from '../administrador/Navbar';
 import Login from './Login';
 import ProcessPage from './Process';
-
+import Reportes from './Reportes';
 import '../styles/app.css'
 import MantenimientosPage from './Mantenimientos';
 
@@ -22,6 +22,7 @@ const App = () => {
                     <Route path="/activos" element={<ActivesPage />} />
                     <Route path="/procesos" element={<ProcessPage />} />
                     <Route path="/mantenimientos" element={<MantenimientosPage />} />
+                    <Route path="/reportes" element={<Reportes />} />
                     <Route path="/crear-activo" element={<CrearActivo />} />
                     <Route path="/crear-activo/:tipo" element={<CrearActivo />} />
                     <Route path="/eliminar-activo" element={<h2>Eliminar Activo</h2>} />
