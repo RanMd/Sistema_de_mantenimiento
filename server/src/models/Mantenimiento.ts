@@ -4,7 +4,7 @@ import { User } from './userModel';
 
 class Mantenimiento extends Model {
     public num_mant!: number;
-    public cod_mant!: string; // New field for cod_mant
+    public cod_mant!: string;
     public user_mant!: number;
     public start_mant!: Date;
     public end_mant?: Date;
@@ -19,7 +19,7 @@ Mantenimiento.init({
         autoIncrement: true,
     },
     cod_mant: {
-        type: DataTypes.STRING, // New field for cod_mant, assuming it's a string
+        type: DataTypes.STRING,
         allowNull: false,
     },
     user_mant: {

@@ -106,6 +106,7 @@ export const getTotalComponentesUsados = async (_req: Request, res: Response) =>
         res.status(200).json({ totalComponentes });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching total componentes usados', error });
+        console.log(error);
     }
 };
 

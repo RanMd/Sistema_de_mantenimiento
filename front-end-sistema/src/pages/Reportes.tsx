@@ -73,8 +73,12 @@ const Estadisticas: React.FC = () => {
                 setActivosPorTipo(activosTipo.data);
                 setMantenimientosPorTipo(mantenimientosTipo.data);
                 setTotalComponentesUsados(componentesUsados.data.totalComponentes);
-            } catch (err: any) {
-                setError(err.message || 'Error fetching data');
+            } catch (err) {
+                if (err instanceof Error) {
+                    setError(err.message || 'Error fetching data');
+                } else {
+                    setError('Error fetching data');
+                }
             } finally {
                 setLoading(false);
             }

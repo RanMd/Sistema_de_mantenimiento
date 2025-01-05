@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import { database } from './config/database';
-import { env } from './config/env';
 import { userRouter } from './routes/userRouter';
 
 // ROUTERS
@@ -11,10 +10,9 @@ import ResponsablesRouter from './routes/ResponsablesRouter';
 import routerActivos from './routes/ActivosRouter';
 import routerMantenimientos from './routes/MantenimientosRouter';
 import componente from './routes/componenteRoute';
-import mantenimiento from './routes/MantenimientoRouter';
 import detalle from './routes/DetalleMantenimientoRouter';
 import componenteMantenimiento from './routes/ComponenteActivoMantenimientoRouter';
-import stats from './routes/estadisticas';
+import stats from './routes/EstadisticasRouter';
 import prueba from './routes/prueba';
 
 const app = express();
@@ -32,7 +30,6 @@ app.use('/api/responsables', ResponsablesRouter);
 app.use('/api/mantenimientos', routerMantenimientos);
 
 app.use('/api/componente', componente);
-app.use('/api/mantenimiento', mantenimiento);
 app.use('/api/detalle', detalle);
 app.use('/api/componenteMantenimiento', componenteMantenimiento);
 app.use('/api/stats', stats);

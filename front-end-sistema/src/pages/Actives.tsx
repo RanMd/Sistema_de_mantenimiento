@@ -7,9 +7,11 @@ import { Table } from '@tanstack/react-table';
 import { Modal } from '../components/Modal';
 import { ActiveToTable, ProcesoCompra, Ubicacion } from '../models/Active';
 import { getActives, getCategories, getProcesses, getTypes, getUbicaciones } from '../services/ActiveService';
-
+import { useAuth } from '../context/useAuth';
 
 const ActivesPage = () => {
+    const { hasAdminRol } = useAuth();
+
     const [ubicaciones, setUbicaciones] = useState<Ubicacion[]>([]);
     const [categories, setCategories] = useState<string[]>([])
     const [processes, setProcesses] = useState<ProcesoCompra[]>([]);
@@ -69,13 +71,22 @@ const ActivesPage = () => {
         fetchCategories()
         fetchTypes()
         fetchProcesses()
+
     }, [fetchActives, fetchCategories, fetchProcesses, fetchTypes, fetchUbicaciones])
 
     return (
         <section className="actives-page">
             <header className='actives-header'>
                 <h1>Inventario de activos</h1>
-                <button className='primary-button' onClick={() => setModalCrearActiveIsOpen(true)}>Agregar activo</button>
+                {hasAdminRol && (
+                    <button
+                        className='primary-button'
+                        onClick={() => setModalCrearActiveIsOpen(true)}
+                    >
+                        Agregar activo
+                    </button>
+                )
+                }
             </header>
             <section className="search-section">
                 <div className="search-filters">
@@ -124,7 +135,7 @@ const ActivesPage = () => {
                     </ComboBoxInput>
                 </div>
             </section>
-            <DataTable columns={columnsActive} data={actives} ref={tableRef} handleModalActive={handleModalActive} ></DataTable>
+            <DataTable columns={columnsActive(hasAdminRol)} data={actives} ref={tableRef} handleModalActive={handleModalActive} ></DataTable>
             <Modal id_activo={activeId} isOpen={modalActiveIsOpen} setIsOpen={setModalActiveIsOpen} />
             {modalCrearActiveIsOpen && <ModalCrearActivo isOpen={modalCrearActiveIsOpen} setIsOpen={setModalCrearActiveIsOpen} />}
         </section>

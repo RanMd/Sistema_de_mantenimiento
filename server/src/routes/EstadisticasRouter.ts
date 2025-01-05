@@ -9,7 +9,7 @@ import {
     getTotalMantenimientosPorTipo,
     getTotalComponentesUsados,
     getAverageMaintenanceDuration,
-} from '../controllers/estadisticas';
+} from '../controllers/EstadisticasController';
 
 
 const router = Router();

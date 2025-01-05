@@ -6,8 +6,10 @@ import { Table } from '@tanstack/react-table';
 import { getProcessesComplete, getProviders } from '../services/ActiveService';
 import { Process, Provider } from '../models/Process';
 import { ModalCrearProvider } from '../components/ModalCrearProvider';
+import { useAuth } from '../context/useAuth';
 
 const ProcessPage = () => {
+    const { hasAdminRol } = useAuth();
     const [modalCrearProviderIsOpen, setModalCrearProviderIsOpen] = useState(false);
 
     const [processes, setProcesses] = useState<Process[]>([])
@@ -42,7 +44,14 @@ const ProcessPage = () => {
         <section className="actives-page">
             <header className='actives-header'>
                 <h1>Procesos de compra registrados</h1>
-                <button className='primary-button' onClick={() => setModalCrearProviderIsOpen(true)}>Agregar Proceso</button>
+                {hasAdminRol && (
+                    <button
+                        className='primary-button'
+                        onClick={() => setModalCrearProviderIsOpen(true)}
+                    >
+                        Agregar Proceso
+                    </button>
+                )}
             </header>
             <section className="search-section">
                 <div className="search-filters">
