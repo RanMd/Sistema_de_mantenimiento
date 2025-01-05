@@ -1,74 +1,48 @@
 import { Request, Response } from 'express';
 import Mantenimiento from '../models/Mantenimiento';
-import { Op } from 'sequelize';
 
-export const getAllMantenimientos = async (req: Request, res: Response) => {
+const createMantenimiento = async (req: Request, res: Response): Promise<void> => {
     try {
-        const mantenimientos = await Mantenimiento.findAll();
-        res.status(200).json(mantenimientos);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching mantenimientos', error });
-    }
-};
+        const { cod_mant, user_mant, start_mant, end_mant, state_mant, description } = req.body;
 
-export const getMantenimientosByFilter = async (req: Request, res: Response) => {
-    const { state, startDate, endDate } = req.query;
-
-    try {
-        const where: any = {};
-
-        if (state) {
-            where.state_mant = state;
+        // Validación básica de los campos obligatorios
+        if (!cod_mant || !user_mant || !start_mant || !state_mant || !description) {
+            res.status(400).json({ message: 'Todos los campos obligatorios deben ser proporcionados.' });
+            return;
         }
 
-        if (startDate || endDate) {
-            where.start_mant = {};
-            if (startDate) {
-                where.start_mant[Op.gte] = new Date(startDate as string);
-            }
-            if (endDate) {
-                where.start_mant[Op.lte] = new Date(endDate as string);
-            }
+        // Creación del nuevo registro
+        const nuevoMantenimiento = await Mantenimiento.create({
+            cod_mant,
+            user_mant,
+            start_mant,
+            end_mant, // Puede ser undefined
+            state_mant,
+            description,
+        });
+
+        res.status(201).json({ message: 'Mantenimiento creado con éxito.', data: nuevoMantenimiento });
+    } catch (error) {
+        res.status(500).json({ message: `Error al crear el mantenimiento: ${(error as Error).message}` });
+    }
+};
+
+const getMantenimientos = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Consultar todos los mantenimientos en la base de datos
+        const mantenimientos = await Mantenimiento.findAll(); // Asumiendo que usas Sequelize o similar
+
+        // Verificar si se encontraron mantenimientos
+        if (mantenimientos.length === 0) {
+            res.status(404).json({ message: 'No se encontraron mantenimientos.' });
+            return;
         }
 
-        const mantenimientos = await Mantenimiento.findAll({ where });
-        res.status(200).json(mantenimientos);
+        // Responder con los datos obtenidos
+        res.status(200).json({ data: mantenimientos });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching mantenimientos by filters', error });
+        res.status(500).json({ message: `Error al obtener los mantenimientos: ${(error as Error).message}` });
     }
 };
 
-export const getTotalMantenimientos = async (_req: Request, res: Response) => {
-    try {
-        const total = await Mantenimiento.count();
-        res.status(200).json({ total });
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total mantenimientos', error });
-    }
-};
-
-export const getTotalMantenimientosByState = async (_req: Request, res: Response) => {
-    try {
-        const totals = await Mantenimiento.findAll({
-            attributes: ['state_mant', [Mantenimiento.sequelize!.fn('COUNT', Mantenimiento.sequelize!.col('state_mant')), 'count']],
-            group: ['state_mant'],
-        });
-
-        res.status(200).json(totals);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total mantenimientos by state', error });
-    }
-};
-
-export const getTotalMantenimientosByUser = async (_req: Request, res: Response) => {
-    try {
-        const totals = await Mantenimiento.findAll({
-            attributes: ['user_mant', [Mantenimiento.sequelize!.fn('COUNT', Mantenimiento.sequelize!.col('user_mant')), 'count']],
-            group: ['user_mant'],
-        });
-
-        res.status(200).json(totals);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total mantenimientos by user', error });
-    }
-};
+export { createMantenimiento, getMantenimientos };

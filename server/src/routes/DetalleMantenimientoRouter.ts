@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getDetallesMantenimiento } from '../controllers/DetalleMantenimientoController';
+import { createDetalleMantenimiento } from '../controllers/DetalleMantenimientoController';
 
 const detalleMantenimientoRouter = Router();
 
-detalleMantenimientoRouter.get('/', getDetallesMantenimiento);
+// Ruta para crear un nuevo detalle de mantenimiento
+detalleMantenimientoRouter.post('/createDet', createDetalleMantenimiento);
 
 export default detalleMantenimientoRouter;

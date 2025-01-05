@@ -30,6 +30,7 @@ app.use('/api/proveedores', ProveedoresRouter);
 app.use('/api/ubicaciones', UbicacionesRouter);
 app.use('/api/responsables', ResponsablesRouter);
 app.use('/api/mantenimientos', routerMantenimientos);
+
 app.use('/api/componente', componente);
 app.use('/api/mantenimiento', mantenimiento);
 app.use('/api/detalle', detalle);

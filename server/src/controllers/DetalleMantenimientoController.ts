@@ -1,32 +1,29 @@
 import { Request, Response } from 'express';
 import DetalleMantenimiento from '../models/DetalleMantenimiento';
-import Mantenimiento from '../models/Mantenimiento';
-import { Activo } from '../models/Activos';
 
-const getDetallesMantenimiento = async (req: Request, res: Response) => {
+const createDetalleMantenimiento = async (req: Request, res: Response): Promise<void> => {
     try {
-        const detalles = await DetalleMantenimiento.findAll({
-            attributes: ['num_mant', 'id_act', 'state_act', 'type_mant', 'comentario'],
-            include: [
-                {
-                    association: 'mantenimiento',
-                    attributes: ['start_mant', 'end_mant', 'state_mant'], // Atributos relevantes del mantenimiento
-                },
-                {
-                    association: 'activo',
-                    attributes: ['name_act', 'code_act'], // Atributos relevantes del activo
-                },
-            ],
-            raw: true,
-            nest: true,
+        const { num_mant, id_act, state_act, type_mant, comentario } = req.body;
+
+        // Validación básica de los campos obligatorios
+        if (!num_mant || !id_act || !state_act || !type_mant) {
+            res.status(400).json({ message: 'Todos los campos obligatorios deben ser proporcionados.' });
+            return;
+        }
+
+        // Creación del nuevo registro
+        const nuevoDetalleMantenimiento = await DetalleMantenimiento.create({
+            num_mant,
+            id_act,
+            state_act,
+            type_mant,
+            comentario,
         });
 
-        if (detalles.length === 0) throw new Error('No existen detalles de mantenimiento');
-
-        res.status(200).json({ data: detalles });
+        res.status(201).json({ message: 'Detalle de mantenimiento creado con éxito.', data: nuevoDetalleMantenimiento });
     } catch (error) {
-        res.status(500).json({ message: `Error al obtener detalles de mantenimiento: ${(error as Error).message}` });
+        res.status(500).json({ message: `Error al crear el detalle de mantenimiento: ${(error as Error).message}` });
     }
 };
 
-export { getDetallesMantenimiento };
+export { createDetalleMantenimiento };

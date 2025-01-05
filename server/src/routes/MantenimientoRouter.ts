@@ -1,18 +1,10 @@
 import { Router } from 'express';
-import {
-    getAllMantenimientos,
-    getMantenimientosByFilter,
-    getTotalMantenimientos,
-    getTotalMantenimientosByState,
-    getTotalMantenimientosByUser,
-} from '../controllers/MantenimientoController';
+import { createMantenimiento, getMantenimientos } from '../controllers/MantenimientoController';
 
-const router = Router();
+const mantenimientoRouter = Router();
 
-router.get('/todos', getAllMantenimientos);
-router.get('/filtro', getMantenimientosByFilter);
-router.get('/total', getTotalMantenimientos);
-router.get('/estado', getTotalMantenimientosByState);
-router.get('/usuario', getTotalMantenimientosByUser);
+// Ruta para crear un nuevo mantenimiento
+mantenimientoRouter.post('/createMant', createMantenimiento);
+mantenimientoRouter.get('/allMant', getMantenimientos);
 
-export default router;
+export default mantenimientoRouter;

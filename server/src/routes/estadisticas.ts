@@ -8,6 +8,7 @@ import {
     getTotalActivosPorTipo,
     getTotalMantenimientosPorTipo,
     getTotalComponentesUsados,
+    getAverageMaintenanceDuration,
 } from '../controllers/estadisticas';
 
 
@@ -21,5 +22,6 @@ router.get('/por-estado', getTotalActivosPorEstado);
 router.get('/tipos', getTotalActivosPorTipo);
 router.get('/mantenimientos-por-tipo', getTotalMantenimientosPorTipo);
 router.get('/componentes-usados', getTotalComponentesUsados);
+router.get('/time', getAverageMaintenanceDuration);
 
 export default router;

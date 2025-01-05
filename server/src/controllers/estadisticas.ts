@@ -108,3 +108,48 @@ export const getTotalComponentesUsados = async (_req: Request, res: Response) =>
         res.status(500).json({ message: 'Error fetching total componentes usados', error });
     }
 };
+
+export const getAverageMaintenanceDuration = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        // Obtener los datos de los mantenimientos con fechas de inicio y fin válidas
+        const mantenimientos = await Mantenimiento.findAll({
+            attributes: ['start_mant', 'end_mant'],
+            where: {
+                end_mant: { $ne: null }, // Asegurar que el mantenimiento tiene una fecha de fin
+            },
+        });
+
+        if (mantenimientos.length === 0) {
+            res.status(200).json({
+                message: 'No se encontraron mantenimientos con fechas válidas.',
+                averageDuration: 0,
+            });
+            return;
+        }
+
+        // Calcular la duración total en días
+        const totalDuration = mantenimientos.reduce((sum, mant) => {
+            const startDate = mant.get('start_mant') as Date;
+            const endDate = mant.get('end_mant') as Date;
+
+            // Calcular la diferencia en días
+            const durationInMs = endDate.getTime() - startDate.getTime();
+            const durationInDays = durationInMs / (1000 * 60 * 60 * 24);
+
+            return sum + durationInDays;
+        }, 0);
+
+        // Calcular el promedio
+        const averageDuration = totalDuration / mantenimientos.length;
+
+        res.status(200).json({
+            message: 'Promedio calculado con éxito.',
+            averageDuration: Number(averageDuration.toFixed(2)), // Redondear a 2 decimales
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error calculando el promedio de duración de los mantenimientos',
+            error,
+        });
+    }
+};

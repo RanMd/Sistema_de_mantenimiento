@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getComponentes } from '../controllers/componenteController';
+import getComponentesPorActivo from '../controllers/componenteController';
 
-const componenteRouter = Router();
+const componentesRouter = Router();
 
-componenteRouter.get('/', getComponentes);
+componentesRouter.post('/componentes', getComponentesPorActivo);
 
-export default componenteRouter;
+export default componentesRouter;
