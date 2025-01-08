@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Activo, CategoriaActivo, MarcaActivo, ProcesoCompra } from '../models/Activos';
+import { Activo, TypeActive, MarcaActivo, ProcesoCompra, ComponenteActivo } from '../models/Activos';
 import { col, fn } from 'sequelize';
 
 const saveActive = async (req: Request, res: Response) => {
@@ -149,41 +149,7 @@ const getAllActivesPerUbication = async (req: Request, res: Response) => {
     }
 };
 
-const getLastId = async (req: Request, res: Response) => {
-    try {
-        const lastId = await Activo.max<number, Activo>('id_act', {
-            raw: true
-        });
-
-        if (!lastId) {
-            res.status(200).json({ data: 0 });
-            return;
-        }
-
-        res.status(200).json({ data: lastId });
-    } catch (error) {
-        res.status(500).json({ message: (error as Error).message });
-    }
-};
-
-const getLastIdProcess = async (req: Request, res: Response) => {
-    try {
-        const lastId = await ProcesoCompra.max<number, ProcesoCompra>('id_proc', {
-            raw: true
-        });
-
-        if (!lastId) {
-            res.status(200).json({ data: 0 });
-            return;
-        }
-
-        res.status(200).json({ data: lastId });
-    } catch (error) {
-        res.status(500).json({ message: (error as Error).message });
-    }
-};
-
-const getActivo = async (req: Request, res: Response) => {
+const getActive = async (req: Request, res: Response) => {
     try {
         const { id_activo } = req.body;
 
@@ -225,9 +191,43 @@ const getActivo = async (req: Request, res: Response) => {
     }
 };
 
+const getLastIdActive = async (req: Request, res: Response) => {
+    try {
+        const lastId = await Activo.max<number, Activo>('id_act', {
+            raw: true
+        });
+
+        if (!lastId) {
+            res.status(200).json({ data: 0 });
+            return;
+        }
+
+        res.status(200).json({ data: lastId });
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
+const getLastIdProcess = async (req: Request, res: Response) => {
+    try {
+        const lastId = await ProcesoCompra.max<number, ProcesoCompra>('id_proc', {
+            raw: true
+        });
+
+        if (!lastId) {
+            res.status(200).json({ data: 0 });
+            return;
+        }
+
+        res.status(200).json({ data: lastId });
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
 const getCategories = async (req: Request, res: Response) => {
     try {
-        const data = await CategoriaActivo.findAll({
+        const data = await TypeActive.findAll({
             attributes: [[fn('DISTINCT', col('category_type')), 'category']],
             raw: true
         })
@@ -244,7 +244,7 @@ const getCategories = async (req: Request, res: Response) => {
 
 const getTypes = async (req: Request, res: Response) => {
     try {
-        const data = await CategoriaActivo.findAll({
+        const data = await TypeActive.findAll({
             attributes: ['name_type'],
         })
 
@@ -258,37 +258,11 @@ const getTypes = async (req: Request, res: Response) => {
     }
 }
 
-const getProcesses = async (req: Request, res: Response) => {
-    try {
-        const data = await ProcesoCompra.findAll({
-            attributes: {
-                exclude: ['provider_proc']
-            },
-            include: [
-                {
-                    association: 'provider',
-                    attributes: ['name_pro']
-                }
-            ],
-            raw: true,
-            nest: true
-        })
-
-        if (data.length === 0) {
-            throw new Error('No existen procesos de compra');
-        }
-
-        res.status(200).json({ data: data })
-    } catch (error) {
-        res.status(500).json({ message: (error as Error).message })
-    }
-}
-
 const getTypesPerCategory = async (req: Request, res: Response) => {
     try {
         const { category } = req.body
 
-        const data = await CategoriaActivo.findAll({
+        const data = await TypeActive.findAll({
             attributes: ['name_type'],
             raw: true,
             where: {
@@ -328,7 +302,57 @@ const getBrandsPerCategory = async (req: Request, res: Response) => {
     }
 }
 
+const getProcesses = async (req: Request, res: Response) => {
+    try {
+        const data = await ProcesoCompra.findAll({
+            attributes: {
+                exclude: ['provider_proc']
+            },
+            include: [
+                {
+                    association: 'provider',
+                    attributes: ['name_pro']
+                }
+            ],
+            raw: true,
+            nest: true
+        })
+
+        if (data.length === 0) {
+            throw new Error('No existen procesos de compra');
+        }
+
+        res.status(200).json({ data: data })
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message })
+    }
+}
+
+const getComponentsPerType = async (req: Request, res: Response) => {
+    try {
+        const { type } = req.body
+
+        const data = await ComponenteActivo.findAll({
+            attributes: ['name_comp'],
+            raw: true,
+            where: {
+                type_act_comp: type
+            }
+        })
+
+        if (!data) {
+            throw new Error('No existen componentes para ese tipo de activo');
+        }
+
+        res.status(200).json({ data: data })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: (error as Error).message })
+    }
+}
+
 export {
-    saveActive, getActivo, getAllActives, getCategories, saveProcess, getLastIdProcess, getAllActivesPerUbication,
-    getTypesPerCategory, getBrandsPerCategory, getLastId, getTypes, getProcesses, deleteActive, deleteProcess
+    saveActive, getActive, getAllActives, getCategories, saveProcess, getLastIdProcess, getAllActivesPerUbication,
+    getTypesPerCategory, getBrandsPerCategory, getLastIdActive, getTypes, getProcesses, deleteActive, deleteProcess,
+    getComponentsPerType
 }

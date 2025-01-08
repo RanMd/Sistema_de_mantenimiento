@@ -62,7 +62,7 @@ const ProcessPage = () => {
 
                     <ComboBoxInput
                         setOption={(option) => setFilter('date_proc', option)}
-                        placeholder='Filtrar proceso por fecha'
+                        placeholder='Filtrar proceso por año'
                     >
                         <span>Ninguno</span>
                         <span>2019</span>

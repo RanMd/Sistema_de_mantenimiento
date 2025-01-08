@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useCallback, JSX } from 'react';
-import { getActivesPerUbication, getActivo, getLastIdMaintenance, getUbicaciones } from '../services/ActiveService';
+import { getActivesPerUbication, getActivo, getComponentsPerType, getLastIdMaintenance, getUbicaciones } from '../services/ActiveService';
 import { ComboBoxInput } from './Input';
 import { Activo, Ubicacion } from '../models/Active';
 import styles from '../styles/modules/modal.module.css';
@@ -234,21 +234,22 @@ const ModalCrearMantenimiento: FC<ModalCrearProviderProps> = ({ isOpen, setIsOpe
 
 
 const SubGroupActive = ({ open, saveActive, id_active }: {
-    open: boolean, saveActive: (id: number, code: string, state: string) => void, id_active: number
+    open: boolean,
+    saveActive: (id: number, code: string, state: string) => void,
+    id_active: number
 }) => {
     const [componentes, setComponentes] = useState<Componente[]>([]);
     const [active, setActive] = useState<Activo>();
     const [stateActive, setStateActive] = useState<string>('');
-    const [nameComponent, setNameComponent] = useState<string>('');
-    const [typeMantenimiento, setTypeMantenimiento] = useState<string>('');
+    const [showGroupComponent, setShowGroupComponent] = useState<boolean>(false);
 
     const codeClass = clsx(styles.detail, styles.detailReadOnly);
     const textAreaClass = clsx(styles.detail, styles.detailTextArea);
 
-    const handleAddComponent = () => {
+    const handleAddComponent = (name: string, type: string) => {
         const component: Componente = {
-            name: nameComponent,
-            type_mant: typeMantenimiento
+            name: name,
+            type_mant: type
         }
 
         setComponentes([...componentes, component]);
@@ -263,10 +264,13 @@ const SubGroupActive = ({ open, saveActive, id_active }: {
         const { data } = await getActivo({ id_activo: id_active });
 
         if (data) { setActive(data) }
+        console.log(data?.category.category_type)
+        console.log(data?.category.category_type !== 'Oficina')
     }, [id_active])
 
     useEffect(() => {
         fetchActive();
+        setShowGroupComponent(false);
     }, [fetchActive])
 
     return (
@@ -289,40 +293,32 @@ const SubGroupActive = ({ open, saveActive, id_active }: {
                     <span>Averiado</span>
                 </ComboBoxInput>
             </div>
-            <SubGroup>
-                <div className={styles.groupInfo}>
-                    <span className={styles.infoLabel}>Tipo :</span>
-                    <ComboBoxInput
-                        setOption={(value) => setTypeMantenimiento(value)}
-                        placeholder='Seleccione un tipo de mantenimiento'
-                        className={styles.comboBox}
-                    >
-                        <span>Ninguno</span>
-                        <span>Reparo</span>
-                        <span>Cambio</span>
-                        <span>Limpieza</span>
-                    </ComboBoxInput>
-                </div>
-                <div className={styles.groupInfo}>
-                    <span className={styles.infoLabel}>Componentes:</span>
-                    <ComboBoxInput
-                        setOption={(value) => setNameComponent(value)}
-                        placeholder='Seleccione un componente'
-                        className={styles.comboBox}
-                    >
-                        <span>Ninguno</span>
-                        <span>CPU</span>
-                        <span>RAM</span>
-                        <span>Grafica</span>
-                    </ComboBoxInput>
-                </div>
+            <div className={styles.groupInfo}>
+                <span className={styles.infoLabel}>Tipo:</span>
+                <ComboBoxInput
+                    setOption={(value) => setStateActive(value)}
+                    placeholder='Tipo de mantenimiento que se le realizará'
+                    className={styles.comboBox}
+                >
+                    <span>Ninguno</span>
+                    <span>Preventivo</span>
+                    <span>Limpieza</span>
+                </ComboBoxInput>
+            </div>
+            {(!showGroupComponent && active?.category.category_type !== 'Oficina') &&
                 <button
                     className='primary-button'
-                    onClick={() => handleAddComponent()}
+                    onClick={() => setShowGroupComponent(true)}
                 >
-                    Guardar componente
+                    Agregar componentes al mantenimiento
                 </button>
-            </SubGroup>
+            }
+            {showGroupComponent && (
+                <SubGroupComponent
+                    handleComponent={handleAddComponent}
+                    active={active!}
+                />
+            )}
             {componentes.length > 0 && (
                 <ModalTable>
                     <div className={styles.modalTableHeader}>
@@ -361,6 +357,65 @@ const SubGroupActive = ({ open, saveActive, id_active }: {
                 Guardar activo
             </button>
         </SubGroup>
+    )
+}
+
+const SubGroupComponent = ({ handleComponent, active }: {
+    handleComponent: (name: string, type: string) => void,
+    active: Activo
+}) => {
+    const [nameComponent, setNameComponent] = useState<string>('');
+    const [typeMantenimiento, setTypeMantenimiento] = useState<string>('');
+
+    const [components, setComponents] = useState<string[]>([]);
+
+    const fetchComponents = useCallback(async () => {
+        const { data } = await getComponentsPerType(active.type_act);
+
+        if (data) { setComponents(data) }
+    }, [active])
+
+    useEffect(() => {
+        fetchComponents();
+    }, [fetchComponents])
+
+    return (
+        <SubGroup>
+            <div className={styles.groupInfo}>
+                <span className={styles.infoLabel}>Tipo :</span>
+                <ComboBoxInput
+                    setOption={(value) => setTypeMantenimiento(value)}
+                    placeholder='Seleccione un tipo de mantenimiento'
+                    className={styles.comboBox}
+                >
+                    <span>Ninguno</span>
+                    <span>Reparo</span>
+                    <span>Cambio</span>
+                    <span>Limpieza</span>
+                </ComboBoxInput>
+            </div>
+            <div className={styles.groupInfo}>
+                <span className={styles.infoLabel}>Componentes:</span>
+                <ComboBoxInput
+                    setOption={(value) => setNameComponent(value)}
+                    placeholder='Seleccione un componente'
+                    className={styles.comboBox}
+                >
+                    <span>Ninguno</span>
+                    {components.map((component, index) => (
+                        <span key={index}>
+                            {component}
+                        </span>
+                    ))}
+                </ComboBoxInput>
+            </div>
+            <button
+                className='primary-button'
+                onClick={() => handleComponent(nameComponent, typeMantenimiento)}
+            >
+                Guardar componente
+            </button>
+        </SubGroup >
     )
 }
 

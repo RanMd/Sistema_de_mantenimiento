@@ -21,10 +21,7 @@ const Navbar: React.FC = () => {
                 <li className="navbar-item">
                     <NavLink to="/reportes" className={({ isActive }) => isActive ? 'item-active' : ''}>Reportes</NavLink>
                 </li>
-                <li className="navbar-item">
-                    <NavLink to="/fichas" className={({ isActive }) => isActive ? 'item-active' : ''}>Fichas</NavLink>
-                </li>
-                <li className="navbar-item">
+                <li className="navbar-item navbar-item-logout">
                     <NavLink to="/" onClick={logout}>Cerrar Sesión</NavLink>
                 </li>
             </ul>

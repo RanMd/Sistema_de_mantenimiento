@@ -2,6 +2,33 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
 import Ubicaciones from './Ubicaciones';
 
+// COMPONENTES DE ACTIVO
+
+class ComponenteActivo extends Model {
+    public name_comp!: string;
+    public type_act_comp!: string;
+}
+
+ComponenteActivo.init({
+    name_comp: {
+        type: DataTypes.TEXT,
+        primaryKey: true
+    },
+    type_act_comp: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        references: {
+            model: 'tipoActivo',
+            key: 'name_type',
+        },
+    },
+}, {
+    sequelize: database,
+    tableName: 'componentes_activo',
+    timestamps: false,
+    schema: 'public',
+});
+
 // MARCAS ACTIVO
 
 class MarcaActivo extends Model {
@@ -23,17 +50,16 @@ MarcaActivo.init({
     tableName: 'fabricantes',
     timestamps: false,
     schema: 'public',
-
 });
 
 // CATEGORIAS ACTIVO
 
-class CategoriaActivo extends Model {
+class TypeActive extends Model {
     public name_type!: string;
     public category_type!: string;
 }
 
-CategoriaActivo.init({
+TypeActive.init({
     name_type: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -189,7 +215,7 @@ Activo.belongsTo(Ubicaciones, {
     as: 'ubication',
 });
 
-Activo.belongsTo(CategoriaActivo, {
+Activo.belongsTo(TypeActive, {
     foreignKey: 'type_act',
     as: 'category',
 });
@@ -204,4 +230,4 @@ Activo.belongsTo(ProcesoCompra, {
     as: 'buy_process',
 });
 
-export { Activo, CategoriaActivo, MarcaActivo, ProcesoCompra, Provider };
+export { Activo, TypeActive, MarcaActivo, ProcesoCompra, Provider, ComponenteActivo };

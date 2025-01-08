@@ -12,8 +12,8 @@ import {
 } from '@tanstack/react-table';
 import { Fragment } from 'react/jsx-runtime';
 import { Ref, useImperativeHandle, useState } from 'react';
-import styles from '../styles/modules/table.module.css'
 import { ActiveToTable } from '../models/Active';
+import styles from '../styles/modules/table.module.css'
 
 interface IDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];

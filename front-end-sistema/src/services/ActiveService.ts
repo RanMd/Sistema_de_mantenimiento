@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import { ActiveToTable, Activo, ActivoToSave, ProcesoCompra, Ubicacion } from '../models/Active';
 import { Process, Provider } from '../models/Process';
+import data from './MOCK_DATA.json';
+import { Maintenance } from '../models/Maintenance';
 
 const api = 'http://localhost:3000/api/activos';
 
@@ -297,6 +299,32 @@ const getBrandsPerCategory = async (category: string): Promise<{ data: string[] 
     }
 }
 
+const getComponentsPerType = async (type: string): Promise<{ data: string[] }> => {
+    try {
+        const componentsData = { type }
+
+        const res = await axios.post<{
+            data: [{ name_comp: string }],
+            message?: string
+        }>(`${api}/getComponentsPerType`, componentsData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        const components: string[] = res.data.data.map((item) => (
+            item.name_comp
+        ))
+
+        return { data: components };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
 const apiUbi = 'http://localhost:3000/api/ubicaciones';
 
 const getUbicaciones = async (): Promise<{ data: Ubicacion[] }> => {
@@ -383,6 +411,26 @@ const getLastIdMaintenance = async (): Promise<{ data: number }> => {
     }
 }
 
+const getAllMaintenance = async (): Promise<{ data: Maintenance[] }> => {
+    try {
+        // const res = await axios.get<{
+        //     data: ProcesoCompra[],
+        //     message?: string
+        // }>(`${apiMant}/`);
+
+        // if (res.data.message) {
+        //     throw new Error(res.data.message);
+        // }
+
+        return { data: data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
 const apiProv = 'http://localhost:3000/api/proveedores';
 
 const getProviders = async (): Promise<{ data: Provider[] }> => {
@@ -408,5 +456,5 @@ const getProviders = async (): Promise<{ data: Provider[] }> => {
 export {
     getActivo, getCategories, getTypesPerCategory, getProcessesComplete, getProviders, getLastIdProcess, saveProcess, deleteProcess,
     getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive, getActivesPerUbication,
-    getLastIdMaintenance
+    getLastIdMaintenance, getComponentsPerType, getAllMaintenance
 };

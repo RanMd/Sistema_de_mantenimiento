@@ -159,3 +159,16 @@
     color: rgb(85, 85, 85);
     cursor: text;
 }
+
+.RowBody .rowGhost {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgb(49, 49, 49);
+    position: absolute;
+    padding: 5px;
+    min-width: 80px;
+    border-radius: 5px;
+    font-weight: 500;
+    border: 2px solid transparent;
+}

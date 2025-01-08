@@ -10,7 +10,9 @@ import { Column, ColumnDef, Row } from '@tanstack/react-table';
 import { ActiveToTable } from '../models/Active';
 import { deleteActive } from '../services/ActiveService';
 import { Process } from '../models/Process';
+import { Maintenance } from '../models/Maintenance';
 import styles from '../styles/modules/dropdownmenu.module.css'
+import stylesTable from '../styles/modules/table.module.css'
 
 const optionSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
@@ -24,7 +26,7 @@ const arrowUpDown = (
     </svg>
 )
 const columnsActive = (hasAdminRol: boolean): ColumnDef<ActiveToTable>[] => {
-    const columns : ColumnDef<ActiveToTable>[] = [
+    const columns: ColumnDef<ActiveToTable>[] = [
         {
             header: 'Nombre',
             accessorKey: 'name',
@@ -61,7 +63,7 @@ const columnsActive = (hasAdminRol: boolean): ColumnDef<ActiveToTable>[] => {
             header: 'Más acciones',
             cell: ({ row }: { row: Row<ActiveToTable> }) => {
                 const active = row.original
-    
+
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -101,7 +103,7 @@ const columnsProcess: ColumnDef<Process>[] = [
                     {arrowUpDown}
                 </button>
             )
-        }
+        },
     },
     {
         header: 'Proveedor',
@@ -109,4 +111,55 @@ const columnsProcess: ColumnDef<Process>[] = [
     }
 ]
 
-export { columnsActive, columnsProcess };
+const columnsMaintenance: ColumnDef<Maintenance>[] = [
+    {
+        header: 'Codigo',
+        accessorKey: 'code_mant',
+    },
+    {
+        accessorKey: 'date_start_mant',
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    Fecha de inicio
+                    {arrowUpDown}
+                </button>
+            )
+        }
+    },
+    {
+        accessorKey: 'date_end_mant',
+        header: 'Fecha de fin',
+        cell: (({ row }) => {
+            const date = row.original.date_end_mant
+
+            return (
+                <>{date ? date : 'Sin fecha'}</>  
+            )
+        })
+    },
+    {
+        header: 'Estado',
+        accessorKey: 'state_mant',
+        cell: (({ row }) => {
+            const isActive = row.original.state_mant === '1'
+            return (
+                <span
+                    className={stylesTable.rowGhost}
+                style={{ 
+                    backgroundColor: isActive ? 'white' : 'black',
+                    color: isActive ? '' : 'white',
+                    borderColor: isActive ? 'rgb(207, 207, 207)' : ''
+                 }}
+                >
+                    
+                    {isActive ? 'Abierto' : 'Cerrado'}
+                </span>
+            )
+        })
+    }
+]
+
+export { columnsActive, columnsProcess, columnsMaintenance };
