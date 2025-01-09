@@ -61,7 +61,7 @@ const MantenimientosPage = () => {
                     <input
                         type='text'
                         onChange={(e) => setFilter('code_mant', e.target.value)}
-                        placeholder='Buscar mantenimiento' />
+                        placeholder='Buscar por codigo' />
 
                     <ComboBoxInput
                         setOption={(option) => handleDateFilter(option)}

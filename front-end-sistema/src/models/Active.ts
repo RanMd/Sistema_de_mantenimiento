@@ -46,6 +46,7 @@ type ActivoToSave = {
 
 type ActiveToTable = {
     id: number;
+    code: string;
     name: string;
     ubication: string;
     category: string;

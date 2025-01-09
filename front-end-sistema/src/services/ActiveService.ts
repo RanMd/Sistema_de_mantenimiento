@@ -75,6 +75,7 @@ const getActives = async (): Promise<{ data: ActiveToTable[] }> => {
         const result: ActiveToTable[] = res.data.data.map((active) => {
             return {
                 id: active.id_act,
+                code: active.code_act,
                 name: active.name_act,
                 ubication: active.ubication.name_ubi,
                 category: active.category.category_type,
@@ -82,6 +83,8 @@ const getActives = async (): Promise<{ data: ActiveToTable[] }> => {
                 buyProcess: active.buy_process.code_proc
             }
         })
+
+        console.log(result);
 
         return { data: result };
     } catch (error) {

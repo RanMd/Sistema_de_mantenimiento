@@ -92,8 +92,12 @@ const ActivesPage = () => {
                 <div className="search-filters">
                     <input
                         type='text'
+                        onChange={(e) => setFilter('code', e.target.value)}
+                        placeholder='Buscar activo por código' />
+                    <input
+                        type='text'
                         onChange={(e) => setFilter('name', e.target.value)}
-                        placeholder='Buscar activo' />
+                        placeholder='Buscar activo por nombre' />
 
                     <ComboBoxInput
                         setOption={(option) => setFilter('category', option)}

@@ -80,7 +80,7 @@ const getAllActives = async (req: Request, res: Response) => {
     try {
         const activos = await Activo.findAll({
             attributes: {
-                exclude: ['code_act', 'ubication_act', 'state_act', 'buy_process_act'],
+                exclude: ['ubication_act', 'state_act', 'buy_process_act'],
             },
             include: [
                 {

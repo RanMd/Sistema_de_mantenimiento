@@ -58,7 +58,7 @@ const ProcessPage = () => {
                     <input
                         type='text'
                         onChange={(e) => setFilter('code_proc', e.target.value)}
-                        placeholder='Buscar activo' />
+                        placeholder='Buscar proceso por codigo' />
 
                     <ComboBoxInput
                         setOption={(option) => setFilter('date_proc', option)}

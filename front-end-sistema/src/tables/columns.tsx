@@ -28,6 +28,10 @@ const arrowUpDown = (
 const columnsActive = (hasAdminRol: boolean): ColumnDef<ActiveToTable>[] => {
     const columns: ColumnDef<ActiveToTable>[] = [
         {
+            header: 'Codigo',
+            accessorKey: 'code',
+        },
+        {
             header: 'Nombre',
             accessorKey: 'name',
         },
@@ -136,7 +140,7 @@ const columnsMaintenance: ColumnDef<Maintenance>[] = [
             const date = row.original.date_end_mant
 
             return (
-                <>{date ? date : 'Sin fecha'}</>  
+                <>{date ? date : 'Sin fecha'}</>
             )
         })
     },
@@ -148,13 +152,13 @@ const columnsMaintenance: ColumnDef<Maintenance>[] = [
             return (
                 <span
                     className={stylesTable.rowGhost}
-                style={{ 
-                    backgroundColor: isActive ? 'white' : 'black',
-                    color: isActive ? '' : 'white',
-                    borderColor: isActive ? 'rgb(207, 207, 207)' : ''
-                 }}
+                    style={{
+                        backgroundColor: isActive ? 'white' : 'black',
+                        color: isActive ? '' : 'white',
+                        borderColor: isActive ? 'rgb(207, 207, 207)' : ''
+                    }}
                 >
-                    
+
                     {isActive ? 'Abierto' : 'Cerrado'}
                 </span>
             )
