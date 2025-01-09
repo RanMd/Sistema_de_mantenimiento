@@ -75,74 +75,117 @@ const ActivesPage = () => {
     }, [fetchActives, fetchCategories, fetchProcesses, fetchTypes, fetchUbicaciones])
 
     return (
-        <section className="actives-page">
-            <header className='actives-header'>
-                <h1>Inventario de activos</h1>
-                {hasAdminRol && (
-                    <button
-                        className='primary-button'
-                        onClick={() => setModalCrearActiveIsOpen(true)}
-                    >
-                        Agregar activo
-                    </button>
-                )
-                }
-            </header>
-            <section className="search-section">
-                <div className="search-filters">
-                    <input
-                        type='text'
-                        onChange={(e) => setFilter('code', e.target.value)}
-                        placeholder='Buscar activo por código' />
-                    <input
-                        type='text'
-                        onChange={(e) => setFilter('name', e.target.value)}
-                        placeholder='Buscar activo por nombre' />
+        <>
+            <section className="actives-page">
+                <header className='actives-header'>
+                    <h1>Inventario de activos</h1>
+                    {hasAdminRol && (
+                        <button
+                            className='primary-button'
+                            onClick={() => setModalCrearActiveIsOpen(true)}
+                        >
+                            Agregar activo
+                        </button>
+                    )
+                    }
+                </header>
+                <section className="search-section">
+                    <div className="search-filters">
+                        <input
+                            type='text'
+                            onChange={(e) => setFilter('code', e.target.value)}
+                            placeholder='Buscar activo por código' />
+                        <input
+                            type='text'
+                            onChange={(e) => setFilter('name', e.target.value)}
+                            placeholder='Buscar activo por nombre' />
 
-                    <ComboBoxInput
-                        setOption={(option) => setFilter('category', option)}
-                        placeholder='Filtrar activo por categoria'
-                    >
-                        <span>Ninguno</span>
-                        {categories.map((category, index) => {
-                            return (
-                                <span key={index}>{category}</span>
-                            )
-                        })}
-                    </ComboBoxInput>
-                    <ComboBoxInput
-                        setOption={(option) => setFilter('type', option)}
-                        placeholder='Filtrar activo por tipo'
-                    >
-                        <span>Ninguno</span>
-                        {types.map((type, index) => (
-                            <span key={index}>{type}</span>
-                        ))}
-                    </ComboBoxInput>
-                    <ComboBoxInput
-                        setOption={(option) => setFilter('ubication', option)}
-                        placeholder='Filtrar activo por ubicación'
-                    >
-                        <span>Ninguno</span>
-                        {ubicaciones.map((ubicacion, index) => (
-                            <span key={index}>{ubicacion.name_ubi}</span>
-                        ))}
-                    </ComboBoxInput>
-                    <ComboBoxInput
-                        setOption={(option) => setFilter('buyProcess', option)}
-                        placeholder='Filtrar activo por proceso'
-                    >
-                        <span>Ninguno</span>
-                        {processes.map((process, index) => (
-                            <span key={index}>{process.code_proc}</span>
-                        ))}
-                    </ComboBoxInput>
-                </div>
+                        <ComboBoxInput
+                            setOption={(option) => setFilter('category', option)}
+                            placeholder='Filtrar activo por categoria'
+                        >
+                            <span>Ninguno</span>
+                            {categories.map((category, index) => {
+                                return (
+                                    <span key={index}>{category}</span>
+                                )
+                            })}
+                        </ComboBoxInput>
+                        <ComboBoxInput
+                            setOption={(option) => setFilter('type', option)}
+                            placeholder='Filtrar activo por tipo'
+                        >
+                            <span>Ninguno</span>
+                            {types.map((type, index) => (
+                                <span key={index}>{type}</span>
+                            ))}
+                        </ComboBoxInput>
+                        <ComboBoxInput
+                            setOption={(option) => setFilter('ubication', option)}
+                            placeholder='Filtrar activo por ubicación'
+                        >
+                            <span>Ninguno</span>
+                            {ubicaciones.map((ubicacion, index) => (
+                                <span key={index}>{ubicacion.name_ubi}</span>
+                            ))}
+                        </ComboBoxInput>
+                        <ComboBoxInput
+                            setOption={(option) => setFilter('buyProcess', option)}
+                            placeholder='Filtrar activo por proceso'
+                        >
+                            <span>Ninguno</span>
+                            {processes.map((process, index) => (
+                                <span key={index}>{process.code_proc}</span>
+                            ))}
+                        </ComboBoxInput>
+                    </div>
+                </section>
+                <DataTable columns={columnsActive(hasAdminRol)} data={actives} ref={tableRef} handleModalActive={handleModalActive} ></DataTable>
+                <Modal id_activo={activeId} isOpen={modalActiveIsOpen} setIsOpen={setModalActiveIsOpen} />
+                {modalCrearActiveIsOpen && <ModalCrearActivo isOpen={modalCrearActiveIsOpen} setIsOpen={setModalCrearActiveIsOpen} />}
             </section>
-            <DataTable columns={columnsActive(hasAdminRol)} data={actives} ref={tableRef} handleModalActive={handleModalActive} ></DataTable>
-            <Modal id_activo={activeId} isOpen={modalActiveIsOpen} setIsOpen={setModalActiveIsOpen} />
-            {modalCrearActiveIsOpen && <ModalCrearActivo isOpen={modalCrearActiveIsOpen} setIsOpen={setModalCrearActiveIsOpen} />}
-        </section>
+            <section className="actives-page">
+                <header className='actives-header'>
+                    <h1>Registro del mantenimiento</h1>
+                </header>
+                <section>
+                    <section>
+                        <span>Código del mantenimiento:</span>
+                        <span>MANT-00001</span>
+                    </section>
+                    <section>
+                        <span>Estado del mantenimiento:</span>
+                        <span>Abierto</span>
+                    </section>
+                    <section>
+                        <span>Fecha de inicio del mantenimiento:</span>
+                        <input type="date" name="date" id="date" />
+                    </section>
+                    <section>
+                        <span>Personal del mantenimiento:</span>
+                        <ComboBoxInput
+                            setOption={(option) => setFilter('buyProcess', option)}
+                            placeholder='Seleccione un tipo'
+                        >
+                            <span>Ninguno</span>
+                            <span>Interno</span>
+                            <span>Externo</span>
+                        </ComboBoxInput>
+                    </section>
+                    <section>
+                        <span>Encargado del mantenimiento:</span>
+                        <ComboBoxInput
+                            setOption={(option) => setFilter('buyProcess', option)}
+                            placeholder='Seleccione el encargado'
+                        >
+                            <span>Ninguno</span>
+                            <span>Juan</span>
+                            <span>Pepe</span>
+                        </ComboBoxInput>
+                    </section>
+                </section>
+            </section>
+        </>
     )
 };
 
