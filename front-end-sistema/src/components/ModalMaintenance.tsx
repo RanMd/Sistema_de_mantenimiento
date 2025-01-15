@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react'
-import { getDetailsReport, getMaintenance } from '../services/ActiveService';
+import { getDetailsReport, getMaintenance, reOpenMaintenance } from '../services/ActiveService';
 import { DetailsReportType, Maintenance } from '../models/Maintenance';
 import styles from '../styles/modules/modal.module.css';
 import { DataTableReport } from '../tables/data-table';
@@ -20,6 +20,16 @@ const ModalMaintenance: FC<ModalProps> = ({ id_maintenance, isOpen, setIsOpen })
     const handleClose = useCallback(() => {
         setIsOpen(false);
     }, [setIsOpen])
+
+    const handleReopenMaintenance = async () => {
+        const opt = confirm('¿Está seguro de reabrir el mantenimiento?');
+
+        if (!opt) { return }
+
+        setIsOpen(false);
+        await reOpenMaintenance(id_maintenance);
+        window.location.reload();
+    }
 
     const renderSubComponent = ({ row }: { row: Row<DetailsReportType> }) => {
         const detail = row.original;
@@ -74,7 +84,7 @@ const ModalMaintenance: FC<ModalProps> = ({ id_maintenance, isOpen, setIsOpen })
                     detail.actividades = detail.actividades.filter((act) => act.activity_act !== null)
                     detail.componentes = detail.componentes.filter((comp) => comp.name_comp_mant !== null)
                 })
-                
+
                 setDetails(data)
             };
         }
@@ -126,6 +136,14 @@ const ModalMaintenance: FC<ModalProps> = ({ id_maintenance, isOpen, setIsOpen })
                         </div>
                     </div>
                 </section>
+                {maintenance?.state_mant !== 1 &&
+                    <button
+                        className='primary-button'
+                        onClick={() => handleReopenMaintenance()}
+                    >
+                        Reabrir mantenimiento
+                    </button>
+                }
                 <section className={styles.sectionPart}>
                     <header className={styles.modalHeader}>
                         <h2>Historial de Mantenimiento</h2>

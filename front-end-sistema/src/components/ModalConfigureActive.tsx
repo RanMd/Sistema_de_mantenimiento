@@ -20,6 +20,7 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
     const [activity, setActivity] = useState<string>('');
     const [activities, setActivities] = useState<string[]>([]);
     const [state = 'Nuevo', setState] = useState<string>('');
+    const [hasUpdates, setHasUpdates] = useState<boolean>(false);
 
     const [message, setMessage] = useState<React.ReactNode | null>(null);
 
@@ -35,22 +36,17 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
 
     const [subGroupVisible, setSubGroupVisible] = useState<boolean>(false);
 
-    const fetchActive = useCallback(async () => {
-        const { data } = await getActivo({ id_activo: idActive });
-
-        if (!data) { return }
-
-        setCodeActive(data.code_act);
-
-        const { data: components } = await getComponentsPerType(data?.type_act);
-        setComponents(components);
-    }, [idActive])
-
     const handleClose = useCallback(() => {
         setIsOpen(false);
     }, [setIsOpen])
 
     const handleSave = useCallback(() => {
+        if (!hasUpdates) {
+            console.log('No hay cambios');
+            handleClose();
+            return;
+        }
+
         if (activities.length === 0 && componentsDetails.length === 0) {
             createMessage(true, 'Debes agregar al menos una actividad o un componente');
             return;
@@ -65,7 +61,16 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
 
         handleAddDetails(details);
         handleClose();
-    }, [activities, componentsDetails, handleAddDetails, handleClose, idActive, state])
+    }, [activities, componentsDetails, handleAddDetails, handleClose, hasUpdates, idActive, state])
+
+    const handleAddActivity = useCallback(() => {
+        if (activity === '' || activities.includes(activity)) {
+            return;
+        }
+
+        setActivities([...activities, activity])
+        setHasUpdates(true);
+    }, [activities, activity])
 
     const createMessage = (isError: boolean, message: string) => {
         const messageClass = clsx(styles.sectionPart, styles.sectionMessage, isError ? styles.sectionError : styles.sectionSuccess);
@@ -76,6 +81,17 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
         )
         setMessage(messageSection);
     }
+
+    const fetchActive = useCallback(async () => {
+        const { data } = await getActivo({ id_activo: idActive });
+
+        if (!data) { return }
+
+        setCodeActive(data.code_act);
+
+        const { data: components } = await getComponentsPerType(data?.type_act);
+        setComponents(components);
+    }, [idActive])
 
     useEffect(() => {
         if (isOpen) {
@@ -90,6 +106,9 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
             if (actualDetail) {
                 setActivities(actualDetail.activity_mant);
                 setComponentsDetails(actualDetail.components);
+                if (actualDetail.components.length > 0) {
+                    setSubGroupVisible(true);
+                }
             }
         }
     }, [details, idActive])
@@ -131,7 +150,7 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
                     <section className={styles.groupDetail}>
                         <span className={styles.infoLabel}>Actividades:</span>
                         <ComboBoxInput
-                            setOption={(option) => setActivity(option)}
+                            setOption={(option) =>  setActivity(option)}
                             placeholder='Seleccione las actividades'
                         >
                             <span>Ninguno</span>
@@ -143,12 +162,7 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
                 </section>
                 <button
                     className='primary-button'
-                    onClick={() => {
-                        if (activity === '') {
-                            return;
-                        }
-                        setActivities([...activities, activity])
-                    }}
+                    onClick={() => handleAddActivity()}
                 >
                     Agregar actividad
                 </button>
@@ -209,6 +223,7 @@ const ConfigureActiveModal: FC<ConfigureActiveModalProps> = ({ idActive, isOpen,
                                 return;
                             }
                             setComponentsDetails([...componentsDetails, actualComponent]);
+                            setHasUpdates(true);
                         }}
                     >
                         Agregar componente al mantenimiento

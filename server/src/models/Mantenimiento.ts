@@ -37,8 +37,8 @@ Mantenimiento.init({
         type: DataTypes.DATE,
     },
     state_mant: {
-        type: DataTypes.STRING,
-        defaultValue: '1',
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
     },
 }, {
     sequelize: database,

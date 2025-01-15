@@ -545,6 +545,48 @@ const saveMaintenance = async (maintenance: MaintenanceToSave, detail?: DetailsT
     }
 }
 
+const updateMaintenance = async (num_mant: number, updates: DetailsType[], idsActives: number[]): Promise<{ success: boolean }> => {
+    try {
+        const data = { num_mant, updates, idsActives }
+
+        const res = await axios.post<{
+            message?: string
+        }>(`${apiMant}/update`, data);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { success: false }
+    }
+}
+
+const closeMaintenance = async (num_mant: number): Promise<{ success: boolean }> => {
+    try {
+        const data = { num_mant }
+
+        const res = await axios.post<{
+            message?: string
+        }>(`${apiMant}/close`, data);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { success: false }
+    }
+}
+
 const getAllMaintenance = async (): Promise<{ data: Maintenance[] }> => {
     try {
         const res = await axios.get<{
@@ -573,6 +615,28 @@ const getMaintenance = async (num_mant: number): Promise<{ data: Maintenance | n
             data: Maintenance,
             message?: string
         }>(`${apiMant}/getOne`, maintenanceData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: null }
+    }
+}
+
+const reOpenMaintenance = async (num_mant: number): Promise<{ data: Maintenance | null }> => {
+    try {
+        const maintenanceData = { num_mant }
+
+        const res = await axios.post<{
+            data: Maintenance,
+            message?: string
+        }>(`${apiMant}/reOpen`, maintenanceData);
 
         if (res.data.message) {
             throw new Error(res.data.message);
@@ -707,6 +771,5 @@ const getProviders = async (): Promise<{ data: Provider[] }> => {
 export {
     getActivo, getCategories, getTypesPerCategory, getProcessesComplete, getProviders, getLastIdProcess, saveProcess, deleteProcess,
     getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive, getActivesPerUbication,
-    getLastIdMaintenance, getComponentsPerType, getAllMaintenance, saveMaintenance, getMaintenance, getDetailsReport, getActivesFree, getDetailsUpdate, getActivesPerMant, getMantenimientosPerActive,
-    getComponentsPerActive
+    getLastIdMaintenance, getComponentsPerType, getAllMaintenance, saveMaintenance, getMaintenance, getDetailsReport, getActivesFree, getDetailsUpdate, getActivesPerMant, getMantenimientosPerActive, updateMaintenance, closeMaintenance, getComponentsPerActive, reOpenMaintenance
 };

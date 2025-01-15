@@ -46,34 +46,25 @@ const createMantenimiento = async (req: Request, res: Response): Promise<void> =
     try {
         const { maintenance, detail } = req.body;
 
-        const { code_mant, type_attendant_mant, attendant_mant, date_end_mant, state_mant, actives } = maintenance as MaintenanceToSave;
+        const { code_mant, type_attendant_mant, attendant_mant, state_mant, actives } = maintenance as MaintenanceToSave;
 
         const mant = await Mantenimiento.create({
-            code_mant: code_mant,
+            code_mant,
             type_attendant_mant,
             attendant_mant,
-            date_end_mant,
             state_mant,
         });
 
         const detailsAux: DetalleMantenimiento[] = [];
 
-        actives.forEach(async (active: { id_act: number }) => {
+        for (const active of actives) {
             const detail = await DetalleMantenimiento.create({
                 num_mant_per: mant.num_mant,
                 id_act: active.id_act,
                 state_act: 'Nuevo',
             });
-
-            await Activo.update({
-                in_maintenance: true,
-            }, {
-                where: {
-                    id_act: active.id_act,
-                }
-            });
             detailsAux.push(detail);
-        });
+        }
 
         if ((detail as DetailsType[]).length > 0) {
             const details = detail as DetailsType[];
@@ -84,25 +75,24 @@ const createMantenimiento = async (req: Request, res: Response): Promise<void> =
                 const detailId = detailsAux.find((d) => d.id_act === id_act)?.id_detail;
 
                 if (activity_mant.length > 0) {
-                    activity_mant.forEach(async (activity) => {
+                    for (const activity of activity_mant) {
                         await DetalleMantenimientoActividades.create({
                             id_detail_per: detailId,
-                            activity_mant: activity,
+                            activity_act: activity,
                         });
-                    });
+                    }
                 }
 
                 if (components.length > 0) {
-                    components.forEach(async (component) => {
+                    for (const component of components) {
                         await DetalleMantenimientoComponente.create({
                             id_detail_per: detailId,
                             name_comp_mant: component.name_comp,
                             type_mant: component.type_mant,
                         });
-                    });
+                    }
                 }
-                console.log(detail);
-
+                
                 await DetalleMantenimiento.update({
                     state_act,
                 }, {
@@ -115,95 +105,131 @@ const createMantenimiento = async (req: Request, res: Response): Promise<void> =
 
         res.status(201);
     } catch (error) {
-        res.status(500).json({ message: `Error al crear el mantenimiento: ${(error as Error).message}` + req.body.mantenance });
+        res.status(500).json({ message: `Error al crear el mantenimiento: ${(error as Error).message}` + req.body.detail });
     }
 };
 
 const updateMantenimiento = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { mantenaince, detail } = req.body;
+        const { num_mant, updates, idsActives } = req.body;
 
-        const { num_mant, type_attendant_mant, attendant_mant, date_end_mant, state_mant } = mantenaince as MaintenanceToSave;
-
-        await Mantenimiento.update({
-            type_attendant_mant,
-            attendant_mant,
-            date_end_mant,
-            state_mant,
-        }, {
-            where: {
-                num_mant: num_mant,
-            },
-        });
-
-        const detailsAux = await DetalleMantenimiento.findAll({
+        let detailsAux = await DetalleMantenimiento.findAll({
             where: {
                 num_mant_per: num_mant,
             },
         });
 
-        if (detail) {
-            const details = detail as DetailsType[];
+        const updatesAsType = (updates as DetailsType[]);
+        const actives = (idsActives as number[]);
 
-            details.forEach(async (detail: DetailsType) => {
-                const { id_act, state_act, activity_mant, components } = detail;
+        const aAgregar = actives.filter(
+            item2 => !detailsAux.some(item1 => item1.id_act === item2)
+        );
 
-                const detailId = detailsAux.find((d) => d.id_act === id_act)?.id_detail;
+        const aEliminar = detailsAux.filter(
+            item1 => !actives.some(item2 => item2 === item1.id_act)
+        );
 
-                if (activity_mant.length > 0) {
-                    const existingActivities = await DetalleMantenimientoActividades.findAll({
-                        where: {
-                            id_detail_per: detailId,
-                        },
-                        attributes: { exclude: ['id_detail_per'] },
-                    });
-
-                    const activitiesAux = activity_mant.filter((activity) => {
-                        return !existingActivities.some((existingActivity) => existingActivity.activity_act === activity);
-                    });
-
-                    activitiesAux.forEach(async (activity) => {
-                        await DetalleMantenimientoActividades.create({
-                            id_detail_per: detailId,
-                            activity_mant: activity,
-                        });
-                    });
-                }
-
-                if (components.length > 0) {
-                    const existingComponents = await DetalleMantenimientoComponente.findAll({
-                        where: {
-                            id_detail_per: detailId,
-                        },
-                        attributes: { exclude: ['id_detail_per'] },
-                    });
-
-                    const componentsAux = components.filter((component) => {
-                        return !existingComponents.some((existingComponent) => existingComponent.name_comp_mant === component.name_comp);
-                    });
-
-                    componentsAux.forEach(async (component) => {
-                        await DetalleMantenimientoComponente.create({
-                            id_detail_per: detailId,
-                            name_comp_mant: component.name_comp,
-                            type_mant: component.type_mant,
-                        });
-                    });
-                }
-
-                await DetalleMantenimiento.update({
-                    state_act,
-                }, {
-                    where: {
-                        id_detail: detailId,
-                    },
+        if (aAgregar.length > 0) {
+            for (const active of aAgregar) {
+                await DetalleMantenimiento.create({
+                    num_mant_per: num_mant,
+                    id_act: active,
+                    state_act: 'Nuevo',
                 });
-            });
+            }
+        }
+        
+        if (aEliminar.length > 0) {
+            for (const active of aEliminar) {
+                await DetalleMantenimiento.destroy({
+                    where: { id_act: active.id_act },
+                });
+            }
         }
 
+        detailsAux = await DetalleMantenimiento.findAll({
+            where: {
+                num_mant_per: num_mant,
+            },
+        });
+
+        updatesAsType.forEach(async (detail: DetailsType) => {
+            const { id_act, state_act, activity_mant, components } = detail;
+
+            const detailId = detailsAux.find((d) => d.id_act === id_act)?.id_detail;
+
+            if (activity_mant.length > 0) {
+                for (const activity of activity_mant) {
+                    await DetalleMantenimientoActividades.create({
+                        id_detail_per: detailId,
+                        activity_act: activity,
+                    });
+                }
+            }
+
+            if (components.length > 0) {
+                for (const component of components) {
+                    await DetalleMantenimientoComponente.create({
+                        id_detail_per: detailId,
+                        name_comp_mant: component.name_comp,
+                        type_mant: component.type_mant,
+                    });
+                    console.log(component)
+                }
+            }
+
+            await DetalleMantenimiento.update({
+                state_act,
+            }, {
+                where: {
+                    id_detail: detailId,
+                },
+            });
+        });
+
+        console.log(detailsAux, 'Agg', aAgregar, 'Elim', aEliminar, 'Detalles', updatesAsType);
         res.status(201);
     } catch (error) {
         res.status(500).json({ message: `Error al actualizar el mantenimiento: ${(error as Error).message}` });
+    }
+}
+
+const closeMaintenance = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { num_mant } = req.body;
+
+        await Mantenimiento.update({
+            state_mant: 0,
+            date_end_mant: new Date().toISOString().split('T')[0],
+        }, {
+            where: {
+                num_mant,
+            },
+        });
+
+        res.status(200).json({ message: 'Mantenimiento cerrado correctamente.' });
+    } catch (error) {
+        res.status(500).json({ message: `Error al cerrar el mantenimiento: ${(error as Error).message}` });
+    }
+}
+
+const reOpenMaintenance = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { num_mant } = req.body;
+
+        await Mantenimiento.update({
+            state_mant: 1,
+            date_end_mant: null,
+        }, {
+            where: {
+                num_mant,
+            },
+        });
+
+        res.status(200).json({ message: 'Mantenimiento reabierto correctamente.' });
+    } catch (error) {
+        res.status(500).json({ message: `Error al reabrir el mantenimiento: ${(error as Error).message}` });
     }
 }
 
@@ -362,4 +388,4 @@ const getActivesPerMant = async (req: Request, res: Response): Promise<void> => 
     }
 }
 
-export { createMantenimiento, getMantenimientos, getLastIdMaintenance, updateMantenimiento, getMaintenance, getDetailsReport, getDetailsUpdate, getActivesPerMant };
+export { createMantenimiento, getMantenimientos, getLastIdMaintenance, updateMantenimiento, getMaintenance, getDetailsReport, getDetailsUpdate, getActivesPerMant, closeMaintenance, reOpenMaintenance };

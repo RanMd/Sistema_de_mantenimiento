@@ -65,6 +65,7 @@ DetalleMantenimientoActividades.init({
     },
     activity_act: {
         type: DataTypes.STRING,
+        allowNull: false,
     }
 }, {
     sequelize: database,
