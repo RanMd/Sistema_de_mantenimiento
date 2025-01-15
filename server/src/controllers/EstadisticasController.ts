@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ProcesoCompra, MarcaActivo, TypeActive } from '../models/Activos';
-import { Activo } from '../models/Activo'
+import { Activo } from '../models/Activo';
 import Ubicaciones from '../models/Ubicaciones'
 import Mantenimiento from '../models/Mantenimientos';
 import moment from 'moment';
