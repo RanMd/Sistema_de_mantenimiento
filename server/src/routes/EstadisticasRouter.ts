@@ -1,27 +1,10 @@
 import { Router } from 'express';
-import {
-    getTotalMantenimientos,
-    getTotalMantenimientosByState,
-    getTotalMantenimientosByUser,
-    getTotalActivos,
-    getTotalActivosPorEstado,
-    getTotalActivosPorTipo,
-    getTotalMantenimientosPorTipo,
-    getTotalComponentesUsados,
-    getAverageMaintenanceDuration,
-} from '../controllers/EstadisticasController';
-
+import { getActivos, getMantenimientos } from '../controllers/EstadisticasController';  // Asegúrate de tener este archivo controlando la lógica
 
 const router = Router();
 
-router.get('/total', getTotalMantenimientos);
-router.get('/estado', getTotalMantenimientosByState);
-router.get('/usuario', getTotalMantenimientosByUser);
-router.get('/total-activos', getTotalActivos);
-router.get('/por-estado', getTotalActivosPorEstado);
-router.get('/tipos', getTotalActivosPorTipo);
-router.get('/mantenimientos-por-tipo', getTotalMantenimientosPorTipo);
-router.get('/componentes-usados', getTotalComponentesUsados);
-router.get('/time', getAverageMaintenanceDuration);
+// Ruta para obtener todos los activos
+router.get('/activos', getActivos);
+router.get('/mantenimientos', getMantenimientos);
 
 export default router;

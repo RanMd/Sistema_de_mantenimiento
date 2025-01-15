@@ -1,156 +1,98 @@
 import { Request, Response } from 'express';
-import Mantenimiento from '../models/Mantenimiento';
-import { Activo } from '../models/Activos';
-import DetalleMantenimiento from '../models/DetalleMantenimiento';
-import ComponenteActivoMantenimiento from '../models/ComponenteActivoMantenimiento';
+import { ProcesoCompra, MarcaActivo, TypeActive } from '../models/Activos';
+import { Activo } from '../models/Activo'
+import Ubicaciones from '../models/Ubicaciones'
+import Mantenimiento from '../models/Mantenimientos';
+import moment from 'moment';
 
-export const getTotalMantenimientos = async (_req: Request, res: Response) => {
+// En tu controlador del backend:
+export const getActivos = async (req: Request, res: Response) => {
     try {
-        const total = await Mantenimiento.count();
-        res.status(200).json({ total });
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total mantenimientos', error });
-    }
-};
-
-export const getTotalMantenimientosByState = async (_req: Request, res: Response) => {
-    try {
-        const totals = await Mantenimiento.findAll({
-            attributes: ['state_mant', [Mantenimiento.sequelize!.fn('COUNT', Mantenimiento.sequelize!.col('state_mant')), 'count']],
-            group: ['state_mant'],
-        });
-
-        res.status(200).json(totals);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total mantenimientos by state', error });
-    }
-};
-
-export const getTotalMantenimientosByUser = async (_req: Request, res: Response) => {
-    try {
-        const totals = await Mantenimiento.findAll({
-            attributes: ['user_mant', [Mantenimiento.sequelize!.fn('COUNT', Mantenimiento.sequelize!.col('user_mant')), 'count']],
-            group: ['user_mant'],
-        });
-
-        res.status(200).json(totals);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total mantenimientos by user', error });
-    }
-};
-
-export const getTotalActivos = async (_req: Request, res: Response) => {
-    try {
-        const total = await Activo.count();
-        res.status(200).json({ total });
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total activos', error });
-    }
-};
-
-// Obtener el total de activos por estado
-export const getTotalActivosPorEstado = async (_req: Request, res: Response) => {
-    try {
-        const totals = await Activo.findAll({
-            attributes: [
-                'state_act',
-                [Activo.sequelize!.fn('COUNT', Activo.sequelize!.col('state_act')), 'count'],
+        const activos = await Activo.findAll({
+            attributes: ['id_act', 'name_act', 'code_act', 'state_act', 'in_maintenance'],
+            include: [
+                {
+                    model: Ubicaciones,
+                    as: 'ubication',
+                    attributes: ['name_ubi'],
+                },
+                {
+                    model: MarcaActivo,
+                    as: 'marca',
+                    attributes: ['name_fab'],
+                },
+                {
+                    model: TypeActive,
+                    as: 'category',
+                    attributes: ['name_type'],
+                },
+                {
+                    model: ProcesoCompra,
+                    as: 'buy_process',
+                    attributes: ['date_proc'],
+                },
             ],
-            group: ['state_act'],
-        });
-        res.status(200).json(totals);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching activos by state', error });
-    }
-};
-
-// Obtener el total de activos por tipo
-export const getTotalActivosPorTipo = async (_req: Request, res: Response) => {
-    try {
-        if (!Activo.sequelize) {
-            throw new Error('Sequelize instance is undefined');
-        }
-        const activosPorTipo = await Activo.findAll({
-            attributes: ['type_act', [Activo.sequelize.fn('COUNT', '*'), 'count']],
-            group: ['type_act'],
         });
 
-        res.status(200).json(activosPorTipo);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching activos por tipo', error });
-    }
-};
-
-export const getTotalMantenimientosPorTipo = async (_req: Request, res: Response) => {
-    try {
-        if (!DetalleMantenimiento.sequelize) {
-            throw new Error('Sequelize instance is undefined');
-        }
-        const mantenimientosPorTipo = await DetalleMantenimiento.findAll({
-            attributes: [
-                'type_mant',
-                [DetalleMantenimiento.sequelize.fn('COUNT', '*'), 'count'],
-            ],
-            group: ['type_mant'],
+        // Mapear los resultados para formatear la fecha
+        const activosFormateados = activos.map((activo) => {
+            return {
+                id_act: activo.id_act,
+                name_act: activo.name_act,
+                code_act: activo.code_act,
+                ubication_act: activo.ubication.name_ubi,
+                state_act: activo.state_act,
+                brand_act: activo.marca.name_fab,
+                type_act: activo.category.name_type,
+                buy_process_act: moment(activo.buy_process.date_proc).format('YYYY-MM-DD'), // Formato de fecha
+                in_maintenance: activo.in_maintenance,
+            };
         });
 
-        res.status(200).json(mantenimientosPorTipo);
+        res.json(activosFormateados); // Devolver los datos formateados
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching mantenimientos por tipo', error });
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los activos', error });
     }
 };
 
-export const getTotalComponentesUsados = async (_req: Request, res: Response) => {
-    try {
-        const totalComponentes = await ComponenteActivoMantenimiento.count();
-        res.status(200).json({ totalComponentes });
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching total componentes usados', error });
-        console.log(error);
-    }
-};
 
-export const getAverageMaintenanceDuration = async (_req: Request, res: Response): Promise<void> => {
+export const getMantenimientos = async (req: Request, res: Response) => {
     try {
-        // Obtener los datos de los mantenimientos con fechas de inicio y fin válidas
         const mantenimientos = await Mantenimiento.findAll({
-            attributes: ['start_mant', 'end_mant'],
-            where: {
-                end_mant: { $ne: null }, // Asegurar que el mantenimiento tiene una fecha de fin
-            },
+            attributes: [
+                'num_mant',
+                'code_mant',
+                'type_attendant_mant',
+                'attendant_mant',
+                'date_start_mant',
+                'date_end_mant',
+                'state_mant',
+            ],
         });
 
-        if (mantenimientos.length === 0) {
-            res.status(200).json({
-                message: 'No se encontraron mantenimientos con fechas válidas.',
-                averageDuration: 0,
-            });
-            return;
-        }
+        // Mapear los resultados para transformarlos
+        const mantenimientosFormateados = mantenimientos.map((mant) => {
+            // Convertir state_mant a número usando Number()
+            const estadoFormateado = Number(mant.state_mant) === 1 ? 'Abierto' : 'Cerrado';
 
-        // Calcular la duración total en días
-        const totalDuration = mantenimientos.reduce((sum, mant) => {
-            const startDate = mant.get('start_mant') as Date;
-            const endDate = mant.get('end_mant') as Date;
+            // Loguear el estado de cada mantenimiento
+            console.log(`Mantenimiento ${mant.num_mant} - Estado: ${estadoFormateado}`);
 
-            // Calcular la diferencia en días
-            const durationInMs = endDate.getTime() - startDate.getTime();
-            const durationInDays = durationInMs / (1000 * 60 * 60 * 24);
-
-            return sum + durationInDays;
-        }, 0);
-
-        // Calcular el promedio
-        const averageDuration = totalDuration / mantenimientos.length;
-
-        res.status(200).json({
-            message: 'Promedio calculado con éxito.',
-            averageDuration: Number(averageDuration.toFixed(2)), // Redondear a 2 decimales
+            return {
+                num_mant: mant.num_mant,
+                code_mant: mant.code_mant,
+                type_attendant_mant: mant.type_attendant_mant,
+                attendant_mant: mant.attendant_mant, // Nombre del atendiente
+                date_start_mant: mant.date_start_mant,
+                date_end_mant: mant.date_end_mant,
+                state_mant: estadoFormateado, // Transformación del estado
+            };
         });
+
+        res.json(mantenimientosFormateados); // Devolver los datos formateados
     } catch (error) {
-        res.status(500).json({
-            message: 'Error calculando el promedio de duración de los mantenimientos',
-            error,
-        });
+        console.error('Error al obtener mantenimientos:', error);
+        res.status(500).json({ message: 'Error al obtener los mantenimientos', error });
     }
 };
