@@ -54,6 +54,18 @@
 .navbar-item a.item-active:hover {
     background-color: var(--item-active-bg-hover);
 }
+
+.navbar-item-logout a {
+    color: #f44336;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #ffebee;
+}
+
+.navbar-item-logout a:hover {
+    background-color: #ffcdd2;
+}
+
 .dropdown {
     position: relative;
 }

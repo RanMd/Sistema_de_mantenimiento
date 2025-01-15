@@ -10,6 +10,7 @@ type UserContextType = {
     loginUser: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
     isLogguedIn: () => boolean;
+    hasAdminRol: boolean;
 }
 
 type AuthProviderProps = { children: ReactNode }
@@ -20,14 +21,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const navigateTo = useNavigate();
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<User | null>(null);
+    const [hasAdminRol, setHasAdminRol] = useState<boolean>(false);
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
+        const userInStorage = localStorage.getItem('user');
+        const tokenInStorage = localStorage.getItem('token');
 
-        if (user && token) {
-            setUser(JSON.parse(user))
-            setToken(token)
+        if (userInStorage && tokenInStorage) {
+            const userObject = JSON.parse(userInStorage) as User;
+            setHasAdminRol(userObject.rol === 'A')
+            setUser(userObject)
+            setToken(tokenInStorage)
             navigateTo('/activos')
         }
     }, [setUser, setToken])
@@ -52,6 +56,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                     localStorage.setItem('user', JSON.stringify(userObject))
                     setUser(userObject)
                     setToken(res.token)
+                    setHasAdminRol(userObject.rol === 'A')  
                     navigateTo('/activos');
                 }
                 return !!res
@@ -71,12 +76,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
 
     return (
-        <UserContext.Provider value={{ loginUser, isLogguedIn, logout, user, token, searchUser }} >
+        <UserContext.Provider value={{ loginUser, isLogguedIn, logout, user, token, searchUser, hasAdminRol }} >
             {children}
         </UserContext.Provider>
     );
 }
-
 const useAuth = () => useContext(UserContext);
 
 export { useAuth, AuthProvider } 

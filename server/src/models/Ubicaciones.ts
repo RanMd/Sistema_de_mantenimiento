@@ -1,36 +1,42 @@
 import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
+import Edificios from './Edificios';
 
 class Ubicaciones extends Model {
     public id_ubi!: number;
-    public edi_ubi!: string;
-    public piso_ubi!: string;
-    public num_lab_ubi!: string;
+    public name_ubi!: string;
+    public floor_ubi!: string;
+    public id_edi_per!: string;
 }
 
 Ubicaciones.init({
     id_ubi: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
     },
-    edi_ubi: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
+    name_ubi: {
+        type: DataTypes.STRING,
     },
-    piso_ubi: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
+    floor_ubi: {
+        type: DataTypes.STRING,
     },
-    num_lab_ubi: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
+    id_edi_per: {
+        type: DataTypes.STRING,
+        references: {
+            model: 'edificios',
+            key: 'id_edi',
+        },
     },
 }, {
     sequelize: database,
     tableName: 'ubicaciones',
     timestamps: false,
     schema: 'public',
+});
+
+Ubicaciones.belongsTo(Edificios, {
+    foreignKey: 'id_edi_per',
+    as: 'edificio',
 });
 
 export default Ubicaciones;

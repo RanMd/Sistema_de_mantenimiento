@@ -4,6 +4,10 @@
     --color-border: #7A869A;
     --color-font: #525a61;
     --bg-color: #fff;
+    --input-color-border: #d7d7d7;
+    --bg-color-data: #fff;
+    --bg-color-item: #f4f4f4;
+    --border: 0 1px 2px 0 rgb(235, 235, 235);
 
     position: relative;
 }
@@ -17,6 +21,7 @@
     padding: var(--pad-input);
     border: 1px solid var(--color-border, #7A869A);
     transition: border-color .15s ease-in-out;
+    width: 100%;
 }
 
 .inputBox input:focus {
@@ -59,4 +64,73 @@
 input:disabled {
     background-color: #f9f9f9;
     color: var(--color-font);
+}
+
+.ComboBoxLabel {
+    height: 100%;
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 0.75rem;
+    font-size: 0.8rem;
+    border: 1px solid var(--input-color-border);
+    box-shadow: var(--border);
+    color: #525a61;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ComboBoxLabel > * {
+    user-select: none;
+}
+
+.ComboBoxIcon {
+    fill: #525a61;
+    width: 10px;
+    height: 10px;
+    transform: rotate(90deg);
+}
+
+.ComboBoxData {
+    background-color: var(--bg-color-data);
+    border: 1px solid var(--input-color-border);
+    box-shadow: var(--border);
+    position: absolute;
+    display: none;
+    margin-top: 5px;
+    padding: 4px;
+    border-radius: 5px;
+    z-index: 1;
+    width: 100%;
+}
+
+.ComboBoxItem {
+    display: flex;
+    border-radius: 4px;
+    transition: background-color 0.05s ease-in-out;
+}
+
+.ComboBoxItem > * {
+    display: inline-block;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    width: 100%;
+}
+
+.ComboBoxItem:hover {
+    background-color: var(--bg-color-item);
+}
+
+.ComboBoxCheck {
+    display: none;
+}
+
+.ComboBoxCheck:checked ~ .ComboBoxData {
+    display: block;
 }

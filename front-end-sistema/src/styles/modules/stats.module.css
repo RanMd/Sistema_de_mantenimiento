@@ -1,0 +1,61 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.infoBox {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.infoBox>div {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.infoBox>div p {
+    margin: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.loading,
+.error {
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 20px;
+    color: #555;
+}
+
+.loading {
+    color: #007BFF;
+    /* Color azul para indicar carga */
+}
+
+.error {
+    color: #FF4D4D;
+    /* Color rojo para errores */
+}

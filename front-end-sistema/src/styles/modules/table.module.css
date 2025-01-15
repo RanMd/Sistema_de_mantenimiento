@@ -1,0 +1,181 @@
+.ActivesTable {
+    --border-table: 1px solid var(--input-color-border);
+    --row-hover: #f5f5f5;
+    --color-font: rgb(49, 49, 49);
+    --color-font-header: rgb(126, 126, 126);
+
+    color: var(--color-font);
+}
+
+.ColumnHeaders {
+    display: grid;
+    grid-template-columns: var(--grid-table);
+    gap: 1rem;
+    border: var(--border-table);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: var(--border-table);
+}
+
+.ColumnHeaders button {
+    color: var(--color-font-header);
+    font-weight: 500;
+    position: absolute;
+    padding: .5rem 1.25rem;
+    border-radius: 5px;
+    color: inherit;
+    background-color: transparent;
+    transition: background-color .10s ease-in-out;
+    display: flex;
+    gap: .5rem;
+}
+
+.ColumnHeaders button:hover {
+    background-color: #d8d8d8;
+    color: black;
+}
+
+.ColumnHeaders span {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    color: var(--color-font-header);
+}
+
+.ColumnHeaders span:last-child {
+    justify-content: center;
+}
+
+.RowBody {
+    border: var(--border-table);
+    border-top: none;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.RowBody li:not(.SubComponent) {
+    display: grid;
+    grid-template-columns: var(--grid-table);
+    gap: 1rem;
+    border-bottom: var(--border-table);
+    transition: background-color .10s ease-in-out;
+}
+
+.SubComponent {
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+.RowBody li span {
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+}
+
+.RowBody li span:last-child div,
+.RowBody li span:first-child {
+    cursor: pointer;
+}
+
+.RowBody li span:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.RowBody li span:last-child div {
+    position: absolute;
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 4px;
+    padding: .45rem;
+    transition: background-color .10s ease-in-out;
+}
+
+.RowBody li span:last-child div:hover {
+    background-color: #d8d8d8;
+}
+
+.RowBody li:hover {
+    background-color: var(--row-hover);
+}
+
+.RowBody li:hover span:first-child {
+    font-weight: 600;
+}
+
+.RowBody li:last-child {
+    border-bottom: none;
+}
+
+.PaginationButtons {
+    padding-top: 1rem;
+    display: flex;
+    gap: .85rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.PaginationButtons span {
+    font-size: 0.9rem;
+    color: rgb(85, 85, 85);
+    font-weight: 600;
+}
+
+.PaginationButtons button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(236, 236, 236);
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .10s ease-in-out;
+}
+
+.PaginationButtons button:disabled {
+    background-color: rgb(192, 192, 192);
+    cursor: not-allowed;
+}
+
+.PaginationButtons button:not(:disabled):hover {
+    background-color: rgb(221, 221, 221);
+}
+
+.PaginationButtons button:first-child {
+    rotate: 180deg;
+}
+
+.PaginationIcon {
+    width: 10px;
+    height: 10px;
+    fill: rgb(104, 104, 104);
+}
+
+.NoData {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    color: rgb(85, 85, 85);
+    cursor: text;
+}
+
+.RowBody .rowGhost {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgb(49, 49, 49);
+    position: absolute;
+    padding: 5px;
+    min-width: 80px;
+    border-radius: 5px;
+    font-weight: 500;
+    border: 2px solid transparent;
+}

@@ -13,12 +13,15 @@ const Navbar: React.FC = () => {
                     <NavLink to="/activos" className={({ isActive }) => isActive ? 'item-active' : ''}>Activos</NavLink>
                 </li>
                 <li className="navbar-item">
+                    <NavLink to="/procesos" className={({ isActive }) => isActive ? 'item-active' : ''}>Procesos de compra</NavLink>
+                </li>
+                <li className="navbar-item">
+                    <NavLink to="/mantenimientos" className={({ isActive }) => isActive ? 'item-active' : ''}>Mantenimientos</NavLink>
+                </li>
+                <li className="navbar-item">
                     <NavLink to="/reportes" className={({ isActive }) => isActive ? 'item-active' : ''}>Reportes</NavLink>
                 </li>
-                <li className="navbar-item">
-                    <NavLink to="/fichas" className={({ isActive }) => isActive ? 'item-active' : ''}>Fichas</NavLink>
-                </li>
-                <li className="navbar-item">
+                <li className="navbar-item navbar-item-logout">
                     <NavLink to="/" onClick={logout}>Cerrar Sesión</NavLink>
                 </li>
             </ul>

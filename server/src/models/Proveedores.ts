@@ -2,29 +2,25 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
 
 class Proveedores extends Model {
-    public id_pro!: string;
-    public nom_pro!: string;
-    public ubi_pro!: string;
-    public gar_pro!: number;
+    public id_pro!: number;
+    public name_pro!: string;
+    public address_pro!: string;
 }
 
 Proveedores.init({
     id_pro: {
         type: DataTypes.STRING(10),
         primaryKey: true,
+        autoIncrement: true,
     },
-    nom_pro: {
+    name_pro: {
         type: DataTypes.STRING(10),
         allowNull: false,
     },
-    ubi_pro: {
+    address_pro: {
         type: DataTypes.STRING(10),
         allowNull: false,
-    },
-    gar_pro: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+    }
 }, {
     sequelize: database,
     tableName: 'proveedores',

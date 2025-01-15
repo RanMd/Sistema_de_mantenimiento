@@ -1,0 +1,122 @@
+[
+    {
+        "code_mant": "MANT-0007",
+        "date_start_mant": "2024-11-23",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0004",
+        "date_start_mant": "2024-05-19",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0009",
+        "date_start_mant": "2024-07-09",
+        "date_end_mant": "2024-04-08",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0005",
+        "date_start_mant": "2025-01-06",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0009",
+        "date_start_mant": "2024-03-24",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0002",
+        "date_start_mant": "2024-08-25",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0002",
+        "date_start_mant": "2024-11-23",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0004",
+        "date_start_mant": "2024-04-10",
+        "date_end_mant": "2024-06-20",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0007",
+        "date_start_mant": "2024-03-08",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0000",
+        "date_start_mant": "2024-09-27",
+        "date_end_mant": "2024-08-19",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0009",
+        "date_start_mant": "2024-07-31",
+        "date_end_mant": "2025-01-03",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0007",
+        "date_start_mant": "2024-01-27",
+        "date_end_mant": "2024-04-06",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0001",
+        "date_start_mant": "2024-12-09",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0000",
+        "date_start_mant": "2024-02-05",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0003",
+        "date_start_mant": "2024-03-24",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0003",
+        "date_start_mant": "2024-07-22",
+        "date_end_mant": "2024-12-12",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0001",
+        "date_start_mant": "2024-11-19",
+        "date_end_mant": "2024-09-02",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0000",
+        "date_start_mant": "2024-12-19",
+        "date_end_mant": "2024-06-15",
+        "state_mant": "0"
+    },
+    {
+        "code_mant": "MANT-0000",
+        "date_start_mant": "2024-09-28",
+        "date_end_mant": null,
+        "state_mant": "1"
+    },
+    {
+        "code_mant": "MANT-0000",
+        "date_start_mant": "2024-09-19",
+        "date_end_mant": "2024-10-29",
+        "state_mant": "0"
+    }
+]

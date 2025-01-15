@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { getUbicaciones } from "../controllers/UbicacionesController";
+import { Router } from 'express';
+import { getUbicaciones } from '../controllers/UbicacionesController';
 
 const ubicacionesRouter = Router();
 
-ubicacionesRouter.get("/", getUbicaciones);
+ubicacionesRouter.get('/', getUbicaciones);
 
 export default ubicacionesRouter;
