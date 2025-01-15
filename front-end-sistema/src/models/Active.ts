@@ -5,6 +5,7 @@ type Activo = {
     state_act: string,
     brand_act: string,
     type_act: string,
+    in_maintenance: boolean,
     ubication: {
         name_ubi: string,
         floor_ubi: number,

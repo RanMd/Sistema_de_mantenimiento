@@ -1,8 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { ActiveToTable, Activo, ActivoToSave, ProcesoCompra, Ubicacion } from '../models/Active';
 import { Process, Provider } from '../models/Process';
-import data from './MOCK_DATA.json';
-import { Maintenance } from '../models/Maintenance';
+import { DetailsReportType, DetailsType, Maintenance, MaintenanceToSave } from '../models/Maintenance';
 
 const api = 'http://localhost:3000/api/activos';
 
@@ -84,7 +83,36 @@ const getActives = async (): Promise<{ data: ActiveToTable[] }> => {
             }
         })
 
-        console.log(result);
+        return { data: result };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        console.log(error)
+        return { data: [] }
+    }
+}
+
+const getActivesFree = async (): Promise<{ data: ActiveToTable[] }> => {
+    try {
+        const res = await axios.get<{
+            data: Activo[],
+            message?: string
+        }>(`${api}/getAllFree`);
+
+        if (res.data.message) { throw new Error(res.data.message) }
+
+        const result: ActiveToTable[] = res.data.data.map((active) => {
+            return {
+                id: active.id_act,
+                code: active.code_act,
+                name: active.name_act,
+                ubication: active.ubication.name_ubi,
+                category: active.category.category_type,
+                type: active.type_act,
+                buyProcess: active.buy_process.code_proc
+            }
+        })
 
         return { data: result };
     } catch (error) {
@@ -328,6 +356,88 @@ const getComponentsPerType = async (type: string): Promise<{ data: string[] }> =
     }
 }
 
+const getComponentsPerActive = async (id_act: number): Promise<{
+    data: {
+        name_comp: string,
+        state_component: string
+    }[]
+}> => {
+    try {
+        const activeData = { id_act }
+
+        const res = await axios.post<{
+            data: {
+                name_comp: string,
+                state_component: string
+            }[],
+            message?: string
+        }>(`${api}/getComponentsPerActive`, activeData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
+// {
+//     "data": [
+//         {
+//             "mantenimiento": {
+//                 "code_mant": "MANT-0009",
+//                 "state_mant": 1
+//             }
+//         }
+//     ]
+// }
+
+const getMantenimientosPerActive = async (id_act: number): Promise<{
+    data: {
+        code_mant: string,
+        state_mant: number
+    }[]
+}> => {
+    try {
+        const activeData = { id_act }
+
+        const res = await axios.post<{
+            data: [
+                {
+                    mantenimiento: {
+                        code_mant: string,
+                        state_mant: number
+                    }
+                }
+            ],
+            message?: string
+        }>(`${api}/getMantenimientosPerActive`, activeData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        const result = res.data.data.map((mantenimiento) => {
+            return {
+                code_mant: mantenimiento.mantenimiento.code_mant,
+                state_mant: mantenimiento.mantenimiento.state_mant
+            }
+        })
+
+        return { data: result };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
 const apiUbi = 'http://localhost:3000/api/ubicaciones';
 
 const getUbicaciones = async (): Promise<{ data: Ubicacion[] }> => {
@@ -414,18 +524,154 @@ const getLastIdMaintenance = async (): Promise<{ data: number }> => {
     }
 }
 
+const saveMaintenance = async (maintenance: MaintenanceToSave, detail?: DetailsType[]): Promise<{ success: boolean }> => {
+    try {
+        const data = { maintenance, detail }
+
+        const res = await axios.post<{
+            message?: string
+        }>(`${apiMant}/save`, data);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { success: false }
+    }
+}
+
 const getAllMaintenance = async (): Promise<{ data: Maintenance[] }> => {
     try {
-        // const res = await axios.get<{
-        //     data: ProcesoCompra[],
-        //     message?: string
-        // }>(`${apiMant}/`);
+        const res = await axios.get<{
+            data: Maintenance[],
+            message?: string
+        }>(`${apiMant}/allMant`);
 
-        // if (res.data.message) {
-        //     throw new Error(res.data.message);
-        // }
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
 
-        return { data: data };
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
+const getMaintenance = async (num_mant: number): Promise<{ data: Maintenance | null }> => {
+    try {
+        const maintenanceData = { num_mant }
+
+        const res = await axios.post<{
+            data: Maintenance,
+            message?: string
+        }>(`${apiMant}/getOne`, maintenanceData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: null }
+    }
+}
+
+const getDetailsReport = async (num_mant: number): Promise<{ data: DetailsReportType[] }> => {
+    try {
+        const maintenanceData = { num_mant }
+
+        const res = await axios.post<{
+            data: {
+                activo: {
+                    code_act: string,
+                    name_act: string
+                },
+                actividades: {
+                    activity_act: string
+                }[],
+                componentes: {
+                    name_comp_mant: string,
+                    type_mant: string
+                }[]
+            }[],
+
+            message?: string
+        }>(`${apiMant}/getDetailsReport`, maintenanceData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
+const getDetailsUpdate = async (num_mant: number): Promise<{ data: DetailsType[] }> => {
+    try {
+        const maintenanceData = { num_mant }
+
+        const res = await axios.post<{
+            data: DetailsType[],
+            message?: string
+        }>(`${apiMant}/getDetailsUpdate`, maintenanceData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        return { data: res.data.data };
+    } catch (error) {
+        console.error((error as AxiosError<{
+            message: string
+        }>).response?.data.message)
+        return { data: [] }
+    }
+}
+
+const getActivesPerMant = async (num_mant: number): Promise<{ data: ActiveToTable[] }> => {
+    try {
+        const maintenanceData = { num_mant }
+
+        const res = await axios.post<{
+            data: {
+                activo: Activo
+            }[],
+            message?: string
+        }>(`${apiMant}/getActivesPerMant`, maintenanceData);
+
+        if (res.data.message) {
+            throw new Error(res.data.message);
+        }
+
+        const result: ActiveToTable[] = res.data.data.map((active) => {
+            return {
+                id: active.activo.id_act,
+                code: active.activo.code_act,
+                name: active.activo.name_act,
+                type: active.activo.type_act,
+                ubication: '',
+                category: '',
+                buyProcess: ''
+            }
+        })
+
+        return { data: result };
     } catch (error) {
         console.error((error as AxiosError<{
             message: string
@@ -456,8 +702,11 @@ const getProviders = async (): Promise<{ data: Provider[] }> => {
     }
 }
 
+
+
 export {
     getActivo, getCategories, getTypesPerCategory, getProcessesComplete, getProviders, getLastIdProcess, saveProcess, deleteProcess,
     getBrandsPerCategory, getUbicaciones, getLastId, saveActive, getActives, getTypes, getProcesses, deleteActive, getActivesPerUbication,
-    getLastIdMaintenance, getComponentsPerType, getAllMaintenance
+    getLastIdMaintenance, getComponentsPerType, getAllMaintenance, saveMaintenance, getMaintenance, getDetailsReport, getActivesFree, getDetailsUpdate, getActivesPerMant, getMantenimientosPerActive,
+    getComponentsPerActive
 };

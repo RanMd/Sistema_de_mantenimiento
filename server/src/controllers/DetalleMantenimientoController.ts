@@ -5,13 +5,11 @@ const createDetalleMantenimiento = async (req: Request, res: Response): Promise<
     try {
         const { num_mant, id_act, state_act, type_mant, comentario } = req.body;
 
-        // Validación básica de los campos obligatorios
         if (!num_mant || !id_act || !state_act || !type_mant) {
             res.status(400).json({ message: 'Todos los campos obligatorios deben ser proporcionados.' });
             return;
         }
 
-        // Creación del nuevo registro
         const nuevoDetalleMantenimiento = await DetalleMantenimiento.create({
             num_mant,
             id_act,

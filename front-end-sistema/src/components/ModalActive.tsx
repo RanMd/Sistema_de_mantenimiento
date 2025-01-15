@@ -1,7 +1,8 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import { Activo } from '../models/Active';
-import { getActivo } from '../services/ActiveService';
+import { getActivo, getComponentsPerActive, getMantenimientosPerActive } from '../services/ActiveService';
 import styles from '../styles/modules/modal.module.css';
+import { ModalTable } from './ModalConfigureActive';
 
 
 interface ModalProps {
@@ -10,8 +11,16 @@ interface ModalProps {
     setIsOpen: (isOpen: boolean) => void;
 }
 
-const Modal: FC<ModalProps> = ({ id_activo, isOpen, setIsOpen }) => {
+const ModalActive: FC<ModalProps> = ({ id_activo, isOpen, setIsOpen }) => {
     const [activo, setActivo] = useState<Activo>()
+    const [components, setComponents] = useState<{
+        name_comp: string,
+        state_component: string,
+    }[]>([]);
+    const [mantenimientos, setMantenimientos] = useState<{
+        code_mant: string,
+        state_mant: number,
+    }[]>([]);
 
     const handleClose = useCallback(() => {
         setIsOpen(false);
@@ -26,7 +35,22 @@ const Modal: FC<ModalProps> = ({ id_activo, isOpen, setIsOpen }) => {
             if (data) setActivo(data);
         }
 
+        const fetchComponents = async () => {
+            const { data } = await getComponentsPerActive(id_activo);
+
+            if (data) setComponents(data);
+        }
+
+        const fetchMantenimientos = async () => {
+            const { data } = await getMantenimientosPerActive(id_activo);
+
+            console.log(data);
+            if (data) setMantenimientos(data);
+        }
+
         fetchActivo();
+        fetchComponents();
+        fetchMantenimientos();
     }, [id_activo])
 
     return (
@@ -88,14 +112,70 @@ const Modal: FC<ModalProps> = ({ id_activo, isOpen, setIsOpen }) => {
                                 {activo?.buy_process.code_proc}
                             </span>
                         </div>
+                        <div className={styles.groupInfo}>
+                            <span className={styles.infoLabel}>Se encuentra en mantenimiento?</span>
+                            <span className={styles.detail}>
+                                {activo?.in_maintenance ? 'Si' : 'No'}
+                            </span>
+                        </div>
                     </div>
                 </section>
+                {activo?.category.category_type !== 'Oficina' && (
+                    <section className={styles.sectionPart}>
+                        <header className={styles.modalHeader}>
+                            <h2>Componentes</h2>
+                            <p>En esta parte se reflejan los componentes que pertenecen al activo.</p>
+                        </header>
+                        <div className={styles.mainSection}>
+                            <ModalTable>
+                                <div className={styles.modalTableHeader}>
+                                    <span>Componente</span>
+                                    <span>Tipo de mantenimiento</span>
+                                </div>
+                                <div className={styles.modalTableBody}>
+                                    {components.map((component, index) => (
+                                        <div key={index} className={styles.modalTableRow}>
+                                            <span>{component.name_comp}</span>
+                                            <span>{component.state_component}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </ModalTable>
+                        </div>
+                    </section>
+                )}
                 <section className={styles.sectionPart}>
                     <header className={styles.modalHeader}>
-                        <h2>Historial de Mantenimiento</h2>
-                        <p>Esta parte refleja el historial completo de acciones y cambios realizados sobre el activo.</p>
+                        <h2>Historial de mantenimientos</h2>
+                        <p>A continuación se muestra el historial de mantenimientos realizados en el activo.</p>
                     </header>
                     <div className={styles.mainSection}>
+                        {mantenimientos.length > 0
+                            ? (
+                                <ModalTable>
+                                    <div className={styles.modalTableHeader}>
+                                        <span>Mantenimiento</span>
+                                        <span>Estado</span>
+                                    </div>
+                                    <div className={styles.modalTableBody}>
+                                        {mantenimientos.map((component, index) => (
+                                            <div key={index} className={styles.modalTableRow}>
+                                                <span>{component.code_mant}</span>
+                                                <span>{component.state_mant === 1 ? 'Abierto' : 'Cerrado'}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ModalTable>
+                            )
+                            : (
+                                <p
+                                    className={styles.detail}
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    No se han registrado mantenimientos con este activo.
+                                </p>
+                            )
+                        }
                     </div>
                 </section>
             </div>
@@ -103,4 +183,4 @@ const Modal: FC<ModalProps> = ({ id_activo, isOpen, setIsOpen }) => {
     )
 }
 
-export { Modal };
+export { ModalActive };

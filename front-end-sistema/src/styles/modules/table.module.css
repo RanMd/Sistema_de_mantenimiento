@@ -55,12 +55,17 @@
     border-bottom-left-radius: 5px;
 }
 
-.RowBody li {
+.RowBody li:not(.SubComponent) {
     display: grid;
     grid-template-columns: var(--grid-table);
     gap: 1rem;
     border-bottom: var(--border-table);
     transition: background-color .10s ease-in-out;
+}
+
+.SubComponent {
+    padding: 1rem;
+    font-size: 0.9rem;
 }
 
 .RowBody li span {
@@ -69,6 +74,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
 }
 
 .RowBody li span:last-child div,

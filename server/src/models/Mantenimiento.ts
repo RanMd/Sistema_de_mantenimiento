@@ -1,15 +1,14 @@
 import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
-import { User } from './userModel';
 
 class Mantenimiento extends Model {
     public num_mant!: number;
-    public cod_mant!: string;
-    public user_mant!: number;
-    public start_mant!: Date;
-    public end_mant?: Date;
+    public code_mant!: string;
+    public type_attendant_mant!: string;
+    public attendant_mant!: number;
+    public date_start_mant!: Date;
+    public date_end_mant?: Date;
     public state_mant!: string;
-    public description!: string;
 }
 
 Mantenimiento.init({
@@ -18,29 +17,28 @@ Mantenimiento.init({
         primaryKey: true,
         autoIncrement: true,
     },
-    cod_mant: {
+    code_mant: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    user_mant: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'usuarios',
-            key: 'id_user',
-        },
-    },
-    start_mant: {
-        type: DataTypes.DATE,
+    type_attendant_mant: {
+        type: DataTypes.STRING,
         allowNull: false,
     },
-    end_mant: {
+    attendant_mant: {
+        type: DataTypes.STRING,
+    },
+    date_start_mant: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    date_end_mant: {
         type: DataTypes.DATE,
     },
     state_mant: {
         type: DataTypes.STRING,
-    },
-    description: {
-        type: DataTypes.TEXT,
+        defaultValue: '1',
     },
 }, {
     sequelize: database,
@@ -49,9 +47,6 @@ Mantenimiento.init({
     schema: 'public',
 });
 
-Mantenimiento.belongsTo(User, {
-    foreignKey: 'user_mant',
-    as: 'usuario',
-});
+
 
 export default Mantenimiento;

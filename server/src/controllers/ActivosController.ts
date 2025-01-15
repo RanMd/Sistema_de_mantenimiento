@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { Activo, TypeActive, MarcaActivo, ProcesoCompra, ComponenteActivo } from '../models/Activos';
+import { Activo, TypeActive, MarcaActivo, ProcesoCompra, ComponentesActivo, DetalleComponentes } from '../models/Activos';
 import { col, fn } from 'sequelize';
+import DetalleMantenimiento from '../models/DetalleMantenimiento';
 
 const saveActive = async (req: Request, res: Response) => {
     try {
@@ -79,6 +80,43 @@ const deleteProcess = async (req: Request, res: Response) => {
 const getAllActives = async (req: Request, res: Response) => {
     try {
         const activos = await Activo.findAll({
+            attributes: {
+                exclude: ['ubication_act', 'state_act', 'buy_process_act'],
+            },
+            include: [
+                {
+                    association: 'ubication',
+                    attributes: ['name_ubi']
+                },
+                {
+                    association: 'category',
+                    attributes: ['category_type'],
+                },
+                {
+                    association: 'buy_process',
+                    attributes: ['code_proc'],
+                }
+            ],
+            raw: true,
+            nest: true
+        });
+
+        if (activos.length === 0) {
+            throw new Error('No existen activos');
+        }
+
+        res.status(200).json({ data: activos });
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
+const getAllActivesFree = async (req: Request, res: Response) => {
+    try {
+        const activos = await Activo.findAll({
+            where: {
+                in_maintenance: false
+            },
             attributes: {
                 exclude: ['ubication_act', 'state_act', 'buy_process_act'],
             },
@@ -332,7 +370,7 @@ const getComponentsPerType = async (req: Request, res: Response) => {
     try {
         const { type } = req.body
 
-        const data = await ComponenteActivo.findAll({
+        const data = await ComponentesActivo.findAll({
             attributes: ['name_comp'],
             raw: true,
             where: {
@@ -351,8 +389,61 @@ const getComponentsPerType = async (req: Request, res: Response) => {
     }
 }
 
+const getComponentsPerActive = async (req: Request, res: Response) => {
+    try {
+        const { id_act } = req.body
+
+        const data = await DetalleComponentes.findAll({
+            attributes: ['name_comp', 'state_component'],
+            where: {
+                id_act_per: id_act
+            },
+            raw: true,
+        })
+
+        if (!data) {
+            throw new Error('No existen componentes para ese activo');
+        }
+
+        res.status(200).json({ data: data })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: (error as Error).message })
+    }
+}
+
+const getMantenimientosPerActive = async (req: Request, res: Response) => {
+    try {
+        const { id_act } = req.body
+
+        const data = await DetalleMantenimiento.findAll({
+            attributes: [],
+            where: {
+                id_act: id_act
+            },
+            include: [
+                {
+                    association: 'mantenimiento',
+                    attributes: ['code_mant', 'state_mant'],
+                }
+            ],
+            raw: true,
+            nest: true
+        })
+
+        if (!data) {
+            throw new Error('No existen mantenimientos para ese activo');
+        }
+
+        res.status(200).json({ data: data })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: (error as Error).message })
+    }
+}
+
 export {
     saveActive, getActive, getAllActives, getCategories, saveProcess, getLastIdProcess, getAllActivesPerUbication,
     getTypesPerCategory, getBrandsPerCategory, getLastIdActive, getTypes, getProcesses, deleteActive, deleteProcess,
-    getComponentsPerType
+    getComponentsPerType, getAllActivesFree, getComponentsPerActive, getMantenimientosPerActive
 }

@@ -8,23 +8,24 @@ import {
     getPaginationRowModel,
     getFilteredRowModel,
     getSortedRowModel,
-    Table
+    Table,
+    Row
 } from '@tanstack/react-table';
 import { Fragment } from 'react/jsx-runtime';
 import { Ref, useImperativeHandle, useState } from 'react';
-import { ActiveToTable } from '../models/Active';
 import styles from '../styles/modules/table.module.css'
 
 interface IDataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     ref?: Ref<Table<TData>>;
-    handleModalActive?: ((id: number) => void);
+    pageSize?: number;
 }
 
-const DataTable = <TData, TValue>({ columns, data, ref, handleModalActive }: IDataTableProps<TData, TValue>) => {
+const DataTable = <TData, TValue>({ columns, data, ref, pageSize = 10 }: IDataTableProps<TData, TValue>) => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [rowSelection, setRowSelection] = useState({})
 
     const table = useReactTable({
         columns,
@@ -35,18 +36,21 @@ const DataTable = <TData, TValue>({ columns, data, ref, handleModalActive }: IDa
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        onRowSelectionChange: setRowSelection,
+        initialState: {
+            pagination: {
+                pageIndex: 0,
+                pageSize: pageSize,
+            }
+        },
         state: {
             sorting,
             columnFilters,
+            rowSelection
         }
     })
 
     useImperativeHandle(ref, () => table, [table]);
-
-    const handleRowClick = (rowOriginal: TData) => {
-        const id = (rowOriginal as ActiveToTable).id
-        handleModalActive?.(id)
-    }
 
     return (
         <div
@@ -76,14 +80,7 @@ const DataTable = <TData, TValue>({ columns, data, ref, handleModalActive }: IDa
                             key={row.id}
                             data-state={row.getIsSelected() && 'selected'}
                         >
-                            {row.getVisibleCells().map((cell, index) => {
-                                if (index === 0) {
-                                    return (
-                                        <span key={cell.id} onClick={() => handleRowClick(cell.row.original)}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </span>
-                                    )
-                                }
+                            {row.getVisibleCells().map((cell) => {
                                 return (
                                     <span key={cell.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -156,4 +153,88 @@ const DataTablePagination = <TData,>({ table }: DataTablePaginationProps<TData>)
     )
 }
 
-export { DataTable };
+interface IDataTableReportProps<TData, TValue> {
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    ref?: Ref<Table<TData>>;
+    pageSize?: number;
+    renderSubComponent: (props: { row: Row<TData> }) => React.ReactElement
+    getRowCanExpand: (row: Row<TData>) => boolean
+}
+
+const DataTableReport = <TData, TValue>({ columns, data, ref, pageSize = 10, getRowCanExpand, renderSubComponent }: IDataTableReportProps<TData, TValue>) => {
+    const table = useReactTable({
+        columns,
+        data,
+        getRowCanExpand,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getExpandedRowModel: getFilteredRowModel(),
+        initialState: {
+            pagination: {
+                pageIndex: 0,
+                pageSize: pageSize,
+            }
+        }
+    })
+
+    useImperativeHandle(ref, () => table, [table]);
+
+    return (
+        <div
+            className={styles.ActivesTable}
+            style={{
+                '--grid-table': '1fr '.repeat(table.getHeaderGroups()[0].headers.length)
+            } as React.CSSProperties}
+        >
+            <div className={styles.ColumnHeaders}>
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <Fragment key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                            <span key={header.id}>
+                                {header.isPlaceholder ? null : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                )}
+                            </span>
+                        ))}
+                    </Fragment>
+                ))}
+            </div>
+            <ul className={styles.RowBody}>
+                {table.getRowModel().rows?.length ?
+                    table.getRowModel().rows.map((row) => {
+                        return (
+                            <Fragment key={row.id}>
+                                <li
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                >
+                                    {row.getVisibleCells().map((cell) => {
+                                        return (
+                                            <span key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </span>
+                                        )
+                                    })}
+                                </li>
+                                {row.getIsExpanded() && (
+                                    <li className={styles.SubComponent}>
+                                        {renderSubComponent({ row })}
+                                    </li>
+                                )}
+                            </Fragment>
+                        )
+                    }) :
+                    <li className={styles.NoData}>
+                        <span>No existe ningun dato.</span>
+                    </li>
+                }
+            </ul>
+            <DataTablePagination table={table} />
+        </div>
+    );
+}
+
+
+export { DataTable, DataTableReport };

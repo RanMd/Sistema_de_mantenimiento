@@ -2,14 +2,49 @@ import { DataTypes, Model } from 'sequelize';
 import { database } from '../config/database';
 import Ubicaciones from './Ubicaciones';
 
+// DETALLE DE ACTIVO
+
+class DetalleComponentes extends Model {
+    name_comp!: string;
+    id_act_per!: number;
+    state_component!: string;
+}
+
+DetalleComponentes.init({
+    name_comp: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    id_act_per: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'activos',
+            key: 'id_act',
+        },
+    },
+    state_component: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+}, {
+    sequelize: database,
+    tableName: 'detalle_componentes_activo',
+    timestamps: false,
+    schema: 'public',
+});
+
+DetalleComponentes.removeAttribute('id');
+
+
 // COMPONENTES DE ACTIVO
 
-class ComponenteActivo extends Model {
+class ComponentesActivo extends Model {
     public name_comp!: string;
     public type_act_comp!: string;
 }
 
-ComponenteActivo.init({
+ComponentesActivo.init({
     name_comp: {
         type: DataTypes.TEXT,
         primaryKey: true
@@ -160,6 +195,7 @@ class Activo extends Model {
     public brand_act!: string;
     public type_act!: string;
     public buy_process_act!: number;
+    public in_maintenance!: boolean;
 }
 
 Activo.init({
@@ -203,6 +239,11 @@ Activo.init({
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    in_maintenance: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
 }, {
     sequelize: database,
     tableName: 'activos',
@@ -230,4 +271,9 @@ Activo.belongsTo(ProcesoCompra, {
     as: 'buy_process',
 });
 
-export { Activo, TypeActive, MarcaActivo, ProcesoCompra, Provider, ComponenteActivo };
+DetalleComponentes.belongsTo(Activo, {
+    foreignKey: 'id_act_per',
+    as: 'activo',
+});
+
+export { Activo, TypeActive, MarcaActivo, ProcesoCompra, Provider, ComponentesActivo, DetalleComponentes };

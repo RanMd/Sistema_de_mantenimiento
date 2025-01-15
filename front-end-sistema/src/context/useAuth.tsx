@@ -56,6 +56,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                     localStorage.setItem('user', JSON.stringify(userObject))
                     setUser(userObject)
                     setToken(res.token)
+                    setHasAdminRol(userObject.rol === 'A')  
                     navigateTo('/activos');
                 }
                 return !!res
